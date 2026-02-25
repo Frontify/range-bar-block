@@ -25,7 +25,10 @@
         "@frontify/guideline-blocks-settings": "^2.0.2",
         "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
+        "autoprefixer": "^10.4.14",
         "eslint": "^8.57.1",
+        "postcss": "8.4.21",
+        "postcss-modules": "6.0.0",
         "prettier": "^3.7.4",
         "typescript": "^5.9.3"
     },
