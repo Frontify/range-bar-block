@@ -20,13 +20,13 @@
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
-        "@frontify/eslint-config-react": "^0.17.6",
+        "@frontify/eslint-config-react": "^1.0.11",
         "@frontify/frontify-cli": "^5.9.4",
         "@frontify/guideline-blocks-settings": "^2.0.2",
         "@types/react": "^18.3.27",
         "@types/react-dom": "^18.3.7",
         "autoprefixer": "^10.4.14",
-        "eslint": "^8.57.1",
+        "eslint": "^9.39.3",
         "postcss": "8.4.21",
         "postcss-modules": "6.0.0",
         "prettier": "^3.7.4",
