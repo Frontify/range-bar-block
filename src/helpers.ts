@@ -1,8 +1,7 @@
-import { Color } from '@frontify/fondue';
+export type RgbaColor = { red: number; green: number; blue: number; alpha: number };
 
 export const pxStringToNumber = (string: string): number => {
-    // eslint-disable-next-line prettier/prettier
-    const stringdigit = string.replace(/\D/g,'');
+    const stringdigit = string.replaceAll(/\D/g, '');
     return +stringdigit;
 };
 
@@ -11,7 +10,7 @@ export const divideStringByNumber = (string: string, number: number): number => 
     return stringNum / number;
 };
 
-export const toRgbaString = (color: Color): string => {
+export const toRgbaString = (color: RgbaColor): string => {
     return `rgba(${color.red}, ${color.green}, ${color.blue}, ${color.alpha})`;
 };
 

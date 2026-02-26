@@ -1,4 +1,4 @@
-.wrapper {
+[data-block-id] .wrapper {
   position: relative;
   display: flex;
   align-items: center;
@@ -6,20 +6,20 @@
   width: 100%;
 }
 
-.input-wrapper {
+[data-block-id] .input-wrapper {
   width: calc(100% + 16px);
   margin: 0 calc(16px / -2);
   position: absolute;
   height: 16px;
 }
 
-.control-wrapper {
+[data-block-id] .control-wrapper {
   width: 100%;
   position: absolute;
   height: 16px;
 }
 
-.input {
+[data-block-id] .input {
   position: absolute;
   width: 100%;
   pointer-events: none;
@@ -30,25 +30,25 @@
   padding: 0;
 }
 
-input::-ms-track {
+[data-block-id] input::-ms-track {
   appearance: none;
   background: transparent;
   border: transparent;
 }
 
-input::-moz-range-track {
+[data-block-id] input::-moz-range-track {
   appearance: none;
   background: transparent;
   border: transparent;
 }
 
-input:focus::-webkit-slider-runnable-track {
+[data-block-id] input:focus::-webkit-slider-runnable-track {
   appearance: none;
   background: transparent;
   border: transparent;
 }
 
-input::-ms-thumb {
+[data-block-id] input::-ms-thumb {
   appearance: none;
   pointer-events: all;
   width: 16px;
@@ -59,7 +59,7 @@ input::-ms-thumb {
   background-color: red;
 }
 
-input::-moz-range-thumb {
+[data-block-id] input::-moz-range-thumb {
   appearance: none;
   pointer-events: all;
   width: 16px;
@@ -70,7 +70,7 @@ input::-moz-range-thumb {
   background-color: red;
 }
 
-input::-webkit-slider-thumb {
+[data-block-id] input::-webkit-slider-thumb {
   appearance: none;
   pointer-events: all;
   width: 16px;
@@ -82,7 +82,7 @@ input::-webkit-slider-thumb {
 }
 
 
-.rail {
+[data-block-id] .rail {
   position: absolute;
   width: 100%;
   top: 50%;
@@ -92,12 +92,12 @@ input::-webkit-slider-thumb {
   background: lightgrey;
 }
 
-.inner-rail {
+[data-block-id] .inner-rail {
   position: absolute;
   height: 100%;
 }
 
-.control {
+[data-block-id] .control {
   width: 16px;
   height: 16px;
   border-radius: 50%;

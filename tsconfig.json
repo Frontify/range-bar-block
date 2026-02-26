@@ -2,8 +2,8 @@
     "compilerOptions": {
         "esModuleInterop": true,
         "isolatedModules": true,
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
@@ -15,5 +15,5 @@
         "resolveJsonModule": true,
         "skipLibCheck": true
     },
-    "exclude": ["dist", "node_modules"]
+    "exclude": ["dist", "node_modules", "legacy"]
 }
