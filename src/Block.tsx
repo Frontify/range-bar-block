@@ -2,7 +2,7 @@ import { useBlockSettings, useEditorState } from '@frontify/app-bridge';
 import { Button, TextInput } from '@frontify/fondue/components';
 import { IconPlus, IconTrashBin } from '@frontify/fondue/icons';
 import { type BlockProps } from '@frontify/guideline-blocks-settings';
-import { type ChangeEvent, type CSSProperties, type FC, useState } from 'react';
+import { type ChangeEvent, type CSSProperties, type FC, useRef, useState } from 'react';
 
 import RangeSlider from './RangeSlider';
 import { divideStringByNumber, pxStringToNumber, toPixels, toRgbaString, type RgbaColor } from './helpers';
@@ -107,7 +107,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         paddingRight = '0px',
         paddingBottom = '0px',
         paddingLeft = '0px',
-        textValues = [],
+        textValues: savedTextValues = [],
         indicatorStyle = DEFAULT_INDICATOR_STYLE,
         indicatorSize = DEFAULT_INDICATOR_SIZE,
         indicatorColor = DEFAULT_INDICATOR_COLOR,
@@ -118,16 +118,17 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         textColor = DEFAULT_TEXT_COLOR,
     } = blockSettings;
 
-    const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+    const [textValues, setTextValues] = useState<SliderRow[]>(savedTextValues);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const saveDebounced = (rows: SliderRow[]) => {
-        if (timer) {
-            clearTimeout(timer);
+        setTextValues(rows);
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
         }
-        const newTimer = setTimeout(() => {
+        timerRef.current = setTimeout(() => {
             setBlockSettings({ ...blockSettings, textValues: rows }).catch(console.error);
-        }, 300);
-        setTimer(newTimer);
+        }, 500);
     };
 
     const onLeftChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
@@ -152,11 +153,13 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
 
     const onAddRow = (): void => {
         const updated = [...textValues, { id: crypto.randomUUID(), value: 50, left: '', right: '', label: '' }];
+        setTextValues(updated);
         setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
     };
 
     const onDelete = (index: number): void => {
         const updated = textValues.filter((_, i) => i !== index);
+        setTextValues(updated);
         setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
     };
 

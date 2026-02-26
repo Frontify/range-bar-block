@@ -1,109 +1,108 @@
 [data-block-id] .wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: calc(16px + 1.6rem);
-  width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: calc(16px + 1.6rem);
+    width: 100%;
 }
 
 [data-block-id] .input-wrapper {
-  width: calc(100% + 16px);
-  margin: 0 calc(16px / -2);
-  position: absolute;
-  height: 16px;
+    width: calc(100% + 16px);
+    margin: 0 calc(16px / -2);
+    position: absolute;
+    height: 16px;
 }
 
 [data-block-id] .control-wrapper {
-  width: 100%;
-  position: absolute;
-  height: 16px;
+    width: 100%;
+    position: absolute;
+    height: 16px;
 }
 
 [data-block-id] .input {
-  position: absolute;
-  width: 100%;
-  pointer-events: none;
-  appearance: none;
-  height: 100%;
-  opacity: 0;
-  z-index: 3;
-  padding: 0;
+    position: absolute;
+    width: 100%;
+    pointer-events: none;
+    appearance: none;
+    height: 100%;
+    opacity: 0;
+    z-index: 3;
+    padding: 0;
 }
 
 [data-block-id] input::-ms-track {
-  appearance: none;
-  background: transparent;
-  border: transparent;
+    appearance: none;
+    background: transparent;
+    border: transparent;
 }
 
 [data-block-id] input::-moz-range-track {
-  appearance: none;
-  background: transparent;
-  border: transparent;
+    appearance: none;
+    background: transparent;
+    border: transparent;
 }
 
 [data-block-id] input:focus::-webkit-slider-runnable-track {
-  appearance: none;
-  background: transparent;
-  border: transparent;
+    appearance: none;
+    background: transparent;
+    border: transparent;
 }
 
 [data-block-id] input::-ms-thumb {
-  appearance: none;
-  pointer-events: all;
-  width: 16px;
-  height: 16px;
-  border-radius: 0px;
-  border: 0 none;
-  cursor: grab;
-  background-color: red;
+    appearance: none;
+    pointer-events: all;
+    width: 16px;
+    height: 16px;
+    border-radius: 0px;
+    border: 0 none;
+    cursor: grab;
+    background-color: red;
 }
 
 [data-block-id] input::-moz-range-thumb {
-  appearance: none;
-  pointer-events: all;
-  width: 16px;
-  height: 16px;
-  border-radius: 0px;
-  border: 0 none;
-  cursor: grab;
-  background-color: red;
+    appearance: none;
+    pointer-events: all;
+    width: 16px;
+    height: 16px;
+    border-radius: 0px;
+    border: 0 none;
+    cursor: grab;
+    background-color: red;
 }
 
 [data-block-id] input::-webkit-slider-thumb {
-  appearance: none;
-  pointer-events: all;
-  width: 16px;
-  height: 16px;
-  border-radius: 0px;
-  border: 0 none;
-  cursor: grab;
-  background-color: red;
+    appearance: none;
+    pointer-events: all;
+    width: 16px;
+    height: 16px;
+    border-radius: 0px;
+    border: 0 none;
+    cursor: grab;
+    background-color: red;
 }
 
-
 [data-block-id] .rail {
-  position: absolute;
-  width: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 6px;
-  border-radius: 3px;
-  background: lightgrey;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 6px;
+    border-radius: 3px;
+    background: lightgrey;
 }
 
 [data-block-id] .inner-rail {
-  position: absolute;
-  height: 100%;
+    position: absolute;
+    height: 100%;
 }
 
 [data-block-id] .control {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  margin-left: calc(16px / -2);
-  transform: translate3d(0, -50%, 0);
-  z-index: 2;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    margin-left: calc(16px / -2);
+    transform: translate3d(0, -50%, 0);
+    z-index: 2;
 }

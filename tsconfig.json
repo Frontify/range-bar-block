@@ -2,18 +2,18 @@
     "compilerOptions": {
         "esModuleInterop": true,
         "isolatedModules": true,
+        "jsx": "react-jsx",
+        "lib": ["ES2021", "DOM"],
         "module": "ESNext",
         "moduleResolution": "bundler",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
         "sourceMap": true,
         "strict": true,
-        "target": "es6",
-        "jsx": "react-jsx",
-        "lib": ["ES2021", "DOM"],
-        "resolveJsonModule": true,
-        "skipLibCheck": true
+        "target": "es6"
     },
     "exclude": ["dist", "node_modules", "legacy"]
 }
