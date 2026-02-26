@@ -4,3 +4,7 @@ dist
 .vscode
 /legacy
 
+# AI / Copilot context files
+.ai/
+.github/copilot-instructions.md
+
