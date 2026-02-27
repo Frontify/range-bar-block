@@ -72,6 +72,7 @@ const RangeSlider: FC<Props> = ({
                 </div>
             </div>
 
+            {/* Floating value label under indicator */}
             <div
                 style={{
                     position: 'absolute',

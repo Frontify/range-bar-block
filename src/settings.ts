@@ -163,12 +163,6 @@ export const settings = defineSettings({
             defaultValue: DEFAULT_TEXT_COLOR,
         },
         {
-            id: 'hasCustomPadding',
-            label: 'Custom Padding',
-            type: 'switch',
-            defaultValue: false,
-        },
-        {
             id: 'padding',
             label: 'Padding',
             type: 'segmentedControls',
@@ -179,19 +173,6 @@ export const settings = defineSettings({
                 { label: 'M', value: Padding.Medium },
                 { label: 'L', value: Padding.Large },
             ],
-            show: (bundle: Bundle) => bundle.getBlock('hasCustomPadding')?.value !== true,
-        },
-        {
-            id: 'paddingCustom',
-            label: 'Padding values',
-            type: 'multiInput',
-            blocks: [
-                { id: 'paddingTop', type: 'input', placeholder: 'Top', defaultValue: '0px' },
-                { id: 'paddingRight', type: 'input', placeholder: 'Right', defaultValue: '0px' },
-                { id: 'paddingBottom', type: 'input', placeholder: 'Bottom', defaultValue: '0px' },
-                { id: 'paddingLeft', type: 'input', placeholder: 'Left', defaultValue: '0px' },
-            ],
-            show: (bundle: Bundle) => bundle.getBlock('hasCustomPadding')?.value === true,
         },
     ],
 });

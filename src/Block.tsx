@@ -2,7 +2,7 @@ import { useBlockSettings, useEditorState } from '@frontify/app-bridge';
 import { Button, TextInput } from '@frontify/fondue/components';
 import { IconPlus, IconTrashBin } from '@frontify/fondue/icons';
 import { type BlockProps } from '@frontify/guideline-blocks-settings';
-import { type ChangeEvent, type CSSProperties, type FC, useRef, useState } from 'react';
+import { type CSSProperties, type FC, type ChangeEvent, useRef, useState } from 'react';
 
 import RangeSlider from './RangeSlider';
 import { divideStringByNumber, pxStringToNumber, toPixels, toRgbaString, type RgbaColor } from './helpers';
@@ -31,12 +31,7 @@ type SliderRow = {
 };
 
 type Settings = {
-    hasCustomPadding: boolean;
     padding: Padding;
-    paddingTop: string;
-    paddingRight: string;
-    paddingBottom: string;
-    paddingLeft: string;
     indicatorStyle: IndicatorShape;
     indicatorSize: string;
     indicatorColor: RgbaColor;
@@ -101,12 +96,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const blockId = appBridge.context('blockId').get();
 
     const {
-        hasCustomPadding = false,
         padding = DEFAULT_PADDING,
-        paddingTop = '0px',
-        paddingRight = '0px',
-        paddingBottom = '0px',
-        paddingLeft = '0px',
         textValues: savedTextValues = [],
         indicatorStyle = DEFAULT_INDICATOR_STYLE,
         indicatorSize = DEFAULT_INDICATOR_SIZE,
@@ -163,13 +153,9 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
     };
 
-    const customPaddingValue = hasCustomPadding
-        ? `${paddingTop} ${paddingRight} ${paddingBottom} ${paddingLeft}`
-        : padding;
-
     const customStyles: CSSProperties = {
         width: '100%',
-        padding: customPaddingValue,
+        padding,
     };
 
     const lineHeightNum = pxStringToNumber(lineHeight);
@@ -202,42 +188,27 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         color: toRgbaString(textColor),
     };
 
-    const labelSpanStyle: CSSProperties = {
-        color: customTextColor.color,
-        display: 'block',
-        overflow: 'visible',
-        whiteSpace: 'normal',
-        wordBreak: 'break-word',
-        marginTop: '1.25%',
-        minWidth: '14%',
-        maxWidth: '14%',
-    };
-
     return (
         <div data-block-id={blockId}>
             {textValues.map((item, index) => (
-                <div className={style.container} style={customStyles} key={item.id}>
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            gap: '8px',
-                            padding: '8px',
-                        }}
-                    >
+                <div
+                    className={style.container}
+                    style={{ ...customStyles, paddingBottom: item.label ? '24px' : '0px' }}
+                    key={item.id}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         {isEditing ? (
                             <TextInput
                                 value={item.left}
                                 onChange={(e) => onLeftChange(e, index)}
-                                placeholder="Left value"
+                                placeholder="Min"
                                 aria-label="Left value"
                             />
                         ) : (
-                            <span style={{ ...labelSpanStyle, textAlign: 'right' }}>{item.left}</span>
+                            <span style={{ color: customTextColor.color, whiteSpace: 'nowrap' }}>{item.left}</span>
                         )}
 
-                        <div style={{ flex: 1, paddingBottom: isEditing ? '40px' : item.label ? '24px' : '0px' }}>
+                        <div style={{ flex: 1 }}>
                             <RangeSlider
                                 min={0}
                                 max={100}
@@ -266,11 +237,11 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                             <TextInput
                                 value={item.right}
                                 onChange={(e) => onRightChange(e, index)}
-                                placeholder="Right value"
+                                placeholder="Max"
                                 aria-label="Right value"
                             />
                         ) : (
-                            <span style={{ ...labelSpanStyle, textAlign: 'left' }}>{item.right}</span>
+                            <span style={{ color: customTextColor.color, whiteSpace: 'nowrap' }}>{item.right}</span>
                         )}
 
                         {isEditing ? (
