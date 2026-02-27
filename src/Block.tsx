@@ -32,6 +32,7 @@ type SliderRow = {
 
 type Settings = {
     padding: Padding;
+    showValueLabel: boolean;
     indicatorStyle: IndicatorShape;
     indicatorSize: string;
     indicatorColor: RgbaColor;
@@ -97,6 +98,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
 
     const {
         padding = DEFAULT_PADDING,
+        showValueLabel = true,
         textValues: savedTextValues = [],
         indicatorStyle = DEFAULT_INDICATOR_STYLE,
         indicatorSize = DEFAULT_INDICATOR_SIZE,
@@ -193,7 +195,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
             {textValues.map((item, index) => (
                 <div
                     className={style.container}
-                    style={{ ...customStyles, paddingBottom: item.label ? '24px' : '0px' }}
+                    style={{ ...customStyles, paddingBottom: showValueLabel ? '28px' : '0px' }}
                     key={item.id}
                 >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -230,6 +232,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                 label={item.label}
                                 onLabelChange={(v) => onLabelChange(v, index)}
                                 textColorStyle={customTextColor}
+                                showValueLabel={showValueLabel}
                             />
                         </div>
 

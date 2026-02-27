@@ -18,6 +18,7 @@ type Props = {
     label?: string;
     onLabelChange?: (value: string) => void;
     textColorStyle?: CSSProperties;
+    showValueLabel?: boolean;
 };
 
 const RangeSlider: FC<Props> = ({
@@ -35,6 +36,7 @@ const RangeSlider: FC<Props> = ({
     label,
     onLabelChange,
     textColorStyle,
+    showValueLabel = true,
 }) => {
     const handleMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -73,28 +75,30 @@ const RangeSlider: FC<Props> = ({
             </div>
 
             {/* Floating value label under indicator */}
-            <div
-                style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: labelLeft,
-                    transform: 'translateX(-50%)',
-                    paddingTop: '4px',
-                    whiteSpace: 'nowrap',
-                    zIndex: 1,
-                }}
-            >
-                {isEditing ? (
-                    <TextInput
-                        placeholder="Label"
-                        value={label ?? ''}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => onLabelChange?.(e.target.value)}
-                        aria-label="Slider label"
-                    />
-                ) : label ? (
-                    <span style={textColorStyle}>{label}</span>
-                ) : null}
-            </div>
+            {showValueLabel && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: labelLeft,
+                        transform: 'translateX(-50%)',
+                        paddingTop: '4px',
+                        whiteSpace: 'nowrap',
+                        zIndex: 1,
+                    }}
+                >
+                    {isEditing ? (
+                        <TextInput
+                            placeholder="Label"
+                            value={label ?? ''}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => onLabelChange?.(e.target.value)}
+                            aria-label="Slider label"
+                        />
+                    ) : label ? (
+                        <span style={textColorStyle}>{label}</span>
+                    ) : null}
+                </div>
+            )}
         </div>
     );
 };

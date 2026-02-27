@@ -163,6 +163,12 @@ export const settings = defineSettings({
             defaultValue: DEFAULT_TEXT_COLOR,
         },
         {
+            id: 'showValueLabel',
+            label: 'Show value label',
+            type: 'switch',
+            defaultValue: true,
+        },
+        {
             id: 'padding',
             label: 'Padding',
             type: 'segmentedControls',
