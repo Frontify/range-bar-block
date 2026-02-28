@@ -207,7 +207,20 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                 aria-label="Left value"
                             />
                         ) : (
-                            <span style={{ color: customTextColor.color, whiteSpace: 'nowrap' }}>{item.left}</span>
+                            <span
+                                title={item.left}
+                                style={{
+                                    color: customTextColor.color,
+                                    maxWidth: '120px',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
+                                    display: 'block',
+                                    flexShrink: 0,
+                                }}
+                            >
+                                {item.left}
+                            </span>
                         )}
 
                         <div style={{ flex: 1 }}>
@@ -244,7 +257,20 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                 aria-label="Right value"
                             />
                         ) : (
-                            <span style={{ color: customTextColor.color, whiteSpace: 'nowrap' }}>{item.right}</span>
+                            <span
+                                title={item.right}
+                                style={{
+                                    color: customTextColor.color,
+                                    maxWidth: '100px',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
+                                    display: 'block',
+                                    flexShrink: 0,
+                                }}
+                            >
+                                {item.right}
+                            </span>
                         )}
 
                         {isEditing ? (
