@@ -195,7 +195,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
             {textValues.map((item, index) => (
                 <div
                     className={style.container}
-                    style={{ ...customStyles, paddingBottom: showValueLabel ? '28px' : '0px' }}
+                    style={{ ...customStyles, paddingBottom: showValueLabel ? '48px' : '0px' }}
                     key={item.id}
                 >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
