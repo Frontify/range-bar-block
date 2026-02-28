@@ -196,12 +196,14 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                 >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         {isEditing ? (
-                            <TextInput
-                                value={item.left}
-                                onChange={(e) => onLeftChange(e, index)}
-                                placeholder="Min"
-                                aria-label="Left value"
-                            />
+                            <div style={{ width: '100px', flexShrink: 0 }}>
+                                <TextInput
+                                    value={item.left}
+                                    onChange={(e) => onLeftChange(e, index)}
+                                    placeholder="Min"
+                                    aria-label="Left value"
+                                />
+                            </div>
                         ) : (
                             <span
                                 title={item.left}
@@ -246,12 +248,14 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                         </div>
 
                         {isEditing ? (
-                            <TextInput
-                                value={item.right}
-                                onChange={(e) => onRightChange(e, index)}
-                                placeholder="Max"
-                                aria-label="Right value"
-                            />
+                            <div style={{ width: '100px', flexShrink: 0 }}>
+                                <TextInput
+                                    value={item.right}
+                                    onChange={(e) => onRightChange(e, index)}
+                                    placeholder="Max"
+                                    aria-label="Right value"
+                                />
+                            </div>
                         ) : (
                             <span
                                 title={item.right}
