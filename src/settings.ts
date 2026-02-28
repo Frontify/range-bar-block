@@ -168,17 +168,5 @@ export const settings = defineSettings({
             type: 'switch',
             defaultValue: true,
         },
-        {
-            id: 'padding',
-            label: 'Padding',
-            type: 'segmentedControls',
-            defaultValue: DEFAULT_PADDING,
-            choices: [
-                { label: 'None', value: Padding.None },
-                { label: 'S', value: Padding.Small },
-                { label: 'M', value: Padding.Medium },
-                { label: 'L', value: Padding.Large },
-            ],
-        },
     ],
 });

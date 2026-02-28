@@ -14,13 +14,11 @@ import {
     DEFAULT_LINE_COLOR,
     DEFAULT_LINE_HEIGHT,
     DEFAULT_LINE_STYLE,
-    DEFAULT_PADDING,
     DEFAULT_TEXT_COLOR,
     IndicatorShape,
     LineShape,
 } from './settings';
 import style from './style.module.css';
-import { type Padding } from './types';
 
 type SliderRow = {
     id: string;
@@ -31,7 +29,6 @@ type SliderRow = {
 };
 
 type Settings = {
-    padding: Padding;
     showValueLabel: boolean;
     indicatorStyle: IndicatorShape;
     indicatorSize: string;
@@ -97,7 +94,6 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const blockId = appBridge.context('blockId').get();
 
     const {
-        padding = DEFAULT_PADDING,
         showValueLabel = true,
         textValues: savedTextValues = [],
         indicatorStyle = DEFAULT_INDICATOR_STYLE,
@@ -157,7 +153,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
 
     const customStyles: CSSProperties = {
         width: '100%',
-        padding,
+        padding: '8px',
     };
 
     const lineHeightNum = pxStringToNumber(lineHeight);
