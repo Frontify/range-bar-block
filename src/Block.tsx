@@ -107,6 +107,10 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     } = blockSettings;
 
     const [textValues, setTextValues] = useState<SliderRow[]>(savedTextValues);
+    const [percentageInputs, setPercentageInputs] = useState<Record<string, string>>(
+        Object.fromEntries(savedTextValues.map((r) => [r.id, String(r.value)])),
+    );
+    const [percentageErrors, setPercentageErrors] = useState<Record<string, boolean>>({});
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const saveDebounced = (rows: SliderRow[]) => {
@@ -130,8 +134,34 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     };
 
     const onValueChange = (value: number, index: number) => {
+        const rowId = textValues[index].id;
         const updated = textValues.map((row, i) => (i === index ? { ...row, value } : row));
+        setPercentageInputs((prev) => ({ ...prev, [rowId]: String(value) }));
+        setPercentageErrors((prev) => ({ ...prev, [rowId]: false }));
         saveDebounced(updated);
+    };
+
+    const onPercentageChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+        const rowId = textValues[index].id;
+        const raw = e.target.value;
+        setPercentageInputs((prev) => ({ ...prev, [rowId]: raw }));
+        if (raw === '') {
+            setPercentageErrors((prev) => ({ ...prev, [rowId]: false }));
+            return;
+        }
+        const num = parseInt(raw, 10);
+        const isValid = !isNaN(num) && num >= 0 && num <= 100 && /^\d+$/.test(raw);
+        setPercentageErrors((prev) => ({ ...prev, [rowId]: !isValid }));
+        if (isValid) {
+            const updated = textValues.map((row, i) => (i === index ? { ...row, value: num } : row));
+            saveDebounced(updated);
+        }
+    };
+
+    const onPercentageBlur = (index: number) => {
+        const row = textValues[index];
+        setPercentageInputs((prev) => ({ ...prev, [row.id]: String(row.value) }));
+        setPercentageErrors((prev) => ({ ...prev, [row.id]: false }));
     };
 
     const onLabelChange = (value: string, index: number) => {
@@ -140,14 +170,27 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     };
 
     const onAddRow = (): void => {
-        const updated = [...textValues, { id: crypto.randomUUID(), value: 50, left: '', right: '', label: '' }];
+        const newRow = { id: crypto.randomUUID(), value: 50, left: '', right: '', label: '' };
+        const updated = [...textValues, newRow];
         setTextValues(updated);
+        setPercentageInputs((prev) => ({ ...prev, [newRow.id]: '50' }));
         setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
     };
 
     const onDelete = (index: number): void => {
+        const rowId = textValues[index].id;
         const updated = textValues.filter((_, i) => i !== index);
         setTextValues(updated);
+        setPercentageInputs((prev) => {
+            const n = { ...prev };
+            delete n[rowId];
+            return n;
+        });
+        setPercentageErrors((prev) => {
+            const n = { ...prev };
+            delete n[rowId];
+            return n;
+        });
         setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
     };
 
@@ -193,10 +236,39 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                     className={style.container}
                     style={{
                         ...customStyles,
-                        paddingBottom: showValueLabel && (item.label || isEditing) ? '48px' : '0px',
+                        paddingBottom: isEditing || (showValueLabel && item.label) ? '48px' : '0px',
                     }}
                     key={item.id}
                 >
+                    {isEditing && (
+                        <div
+                            style={{
+                                position: 'absolute',
+                                bottom: 4,
+                                right: 4,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'flex-end',
+                                gap: 2,
+                            }}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <div style={{ width: '52px' }}>
+                                    <TextInput
+                                        value={percentageInputs[item.id] ?? String(item.value)}
+                                        onChange={(e) => onPercentageChange(e, index)}
+                                        onBlur={() => onPercentageBlur(index)}
+                                        placeholder="0–100"
+                                        aria-label="Percentage value"
+                                    />
+                                </div>
+                                <span style={{ fontSize: '13px', color: customTextColor.color }}>%</span>
+                            </div>
+                            {percentageErrors[item.id] && (
+                                <span style={{ fontSize: '11px', color: 'red', lineHeight: 1 }}>0 – 100</span>
+                            )}
+                        </div>
+                    )}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         {isEditing ? (
                             <div style={{ flex: '1 1 33%', maxWidth: '100px' }}>
