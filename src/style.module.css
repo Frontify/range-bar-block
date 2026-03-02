@@ -1,4 +1,76 @@
 .container {
     position: relative;
     box-sizing: border-box;
+    width: 100%;
+    padding: 8px;
+    padding-bottom: 0;
+}
+
+.containerWithLabel {
+    padding-bottom: 48px;
+}
+
+.editControls {
+    position: absolute;
+    bottom: 8px;
+    right: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    z-index: 2;
+}
+
+.editControlsRow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.percentageInput {
+    width: 52px;
+}
+
+.percentageUnit {
+    font-size: 13px;
+}
+
+.percentageError {
+    font-size: 11px;
+    color: red;
+    line-height: 1;
+}
+
+.sliderRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inputSide {
+    flex: 1 1 33%;
+    max-width: 100px;
+}
+
+.inputCenter {
+    flex: 1 1 33%;
+    min-width: 0;
+}
+
+.labelTextLeft {
+    max-width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    flex-shrink: 0;
+}
+
+.labelTextRight {
+    max-width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    flex-shrink: 0;
 }

@@ -47,7 +47,7 @@ const RangeSlider: FC<Props> = ({
     const labelLeft = `${maxPos + offset}%`;
 
     return (
-        <div style={{ position: 'relative', width: '100%' }}>
+        <div className="slider-root">
             <div className="wrapper">
                 <div className="input-wrapper">
                     <input
@@ -65,10 +65,7 @@ const RangeSlider: FC<Props> = ({
 
                 <div className="control-wrapper">
                     <div className="rail" style={lineStyles}>
-                        <div
-                            className="inner-rail"
-                            style={{ ...activeLineStyles, left: '0', right: `${100 - maxPos}%` }}
-                        />
+                        <div className="inner-rail" style={{ ...activeLineStyles, right: `${100 - maxPos}%` }} />
                     </div>
                     <div className="control" style={{ ...indicatorStyles, left: labelLeft }} />
                 </div>
@@ -76,19 +73,9 @@ const RangeSlider: FC<Props> = ({
 
             {/* Floating value label under indicator */}
             {showValueLabel && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: labelLeft,
-                        transform: 'translateX(-50%)',
-                        paddingTop: '4px',
-                        whiteSpace: 'nowrap',
-                        zIndex: 1,
-                    }}
-                >
+                <div className="value-label" style={{ left: labelLeft }}>
                     {isEditing ? (
-                        <div style={{ width: '100px' }}>
+                        <div className="value-label-input">
                             <TextInput
                                 placeholder="Label"
                                 value={label ?? ''}

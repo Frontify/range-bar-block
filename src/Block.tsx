@@ -194,11 +194,6 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
     };
 
-    const customStyles: CSSProperties = {
-        width: '100%',
-        padding: '8px',
-    };
-
     const lineHeightNum = pxStringToNumber(lineHeight);
     const indicatorSizeNum = pxStringToNumber(indicatorSize);
     const indicatorDimensions = toIndicatorSize(indicatorStyle, indicatorSize, lineHeightNum);
@@ -233,27 +228,13 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         <div data-block-id={blockId}>
             {textValues.map((item, index) => (
                 <div
-                    className={style.container}
-                    style={{
-                        ...customStyles,
-                        paddingBottom: isEditing || (showValueLabel && item.label) ? '48px' : '0px',
-                    }}
+                    className={`${style.container}${isEditing || (showValueLabel && item.label) ? ` ${style.containerWithLabel}` : ''}`}
                     key={item.id}
                 >
                     {isEditing && (
-                        <div
-                            style={{
-                                position: 'absolute',
-                                bottom: 8,
-                                right: 4,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'flex-end',
-                                gap: 2,
-                            }}
-                        >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <div style={{ width: '52px' }}>
+                        <div className={style.editControls}>
+                            <div className={style.editControlsRow}>
+                                <div className={style.percentageInput}>
                                     <TextInput
                                         value={percentageInputs[item.id] ?? String(item.value)}
                                         onChange={(e) => onPercentageChange(e, index)}
@@ -262,16 +243,16 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                         aria-label="Percentage value"
                                     />
                                 </div>
-                                <span style={{ fontSize: '13px', color: customTextColor.color }}>%</span>
+                                <span className={style.percentageUnit} style={{ color: customTextColor.color }}>
+                                    %
+                                </span>
                             </div>
-                            {percentageErrors[item.id] && (
-                                <span style={{ fontSize: '11px', color: 'red', lineHeight: 1 }}>0 – 100</span>
-                            )}
+                            {percentageErrors[item.id] && <span className={style.percentageError}>0 – 100</span>}
                         </div>
                     )}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div className={style.sliderRow}>
                         {isEditing ? (
-                            <div style={{ flex: '1 1 33%', maxWidth: '100px' }}>
+                            <div className={style.inputSide}>
                                 <TextInput
                                     value={item.left}
                                     onChange={(e) => onLeftChange(e, index)}
@@ -282,21 +263,14 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                         ) : (
                             <span
                                 title={item.left}
-                                style={{
-                                    color: customTextColor.color,
-                                    maxWidth: '120px',
-                                    overflow: 'hidden',
-                                    whiteSpace: 'nowrap',
-                                    textOverflow: 'ellipsis',
-                                    display: 'block',
-                                    flexShrink: 0,
-                                }}
+                                className={style.labelTextLeft}
+                                style={{ color: customTextColor.color }}
                             >
                                 {item.left}
                             </span>
                         )}
 
-                        <div style={{ flex: '1 1 33%', minWidth: 0 }}>
+                        <div className={style.inputCenter}>
                             <RangeSlider
                                 min={0}
                                 max={100}
@@ -323,7 +297,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                         </div>
 
                         {isEditing ? (
-                            <div style={{ flex: '1 1 33%', maxWidth: '100px' }}>
+                            <div className={style.inputSide}>
                                 <TextInput
                                     value={item.right}
                                     onChange={(e) => onRightChange(e, index)}
@@ -334,15 +308,8 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                         ) : (
                             <span
                                 title={item.right}
-                                style={{
-                                    color: customTextColor.color,
-                                    maxWidth: '100px',
-                                    overflow: 'hidden',
-                                    whiteSpace: 'nowrap',
-                                    textOverflow: 'ellipsis',
-                                    display: 'block',
-                                    flexShrink: 0,
-                                }}
+                                className={style.labelTextRight}
+                                style={{ color: customTextColor.color }}
                             >
                                 {item.right}
                             </span>
