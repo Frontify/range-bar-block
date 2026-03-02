@@ -199,7 +199,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                 >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         {isEditing ? (
-                            <div style={{ width: '100px', flexShrink: 0 }}>
+                            <div style={{ flex: '1 1 33%', maxWidth: '100px' }}>
                                 <TextInput
                                     value={item.left}
                                     onChange={(e) => onLeftChange(e, index)}
@@ -224,7 +224,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                             </span>
                         )}
 
-                        <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ flex: '1 1 33%', minWidth: 0 }}>
                             <RangeSlider
                                 min={0}
                                 max={100}
@@ -251,7 +251,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                         </div>
 
                         {isEditing ? (
-                            <div style={{ width: '100px', flexShrink: 0 }}>
+                            <div style={{ flex: '1 1 33%', maxWidth: '100px' }}>
                                 <TextInput
                                     value={item.right}
                                     onChange={(e) => onRightChange(e, index)}

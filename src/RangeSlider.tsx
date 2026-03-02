@@ -88,12 +88,14 @@ const RangeSlider: FC<Props> = ({
                     }}
                 >
                     {isEditing ? (
-                        <TextInput
-                            placeholder="Label"
-                            value={label ?? ''}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => onLabelChange?.(e.target.value)}
-                            aria-label="Slider label"
-                        />
+                        <div style={{ width: '100px' }}>
+                            <TextInput
+                                placeholder="Label"
+                                value={label ?? ''}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => onLabelChange?.(e.target.value)}
+                                aria-label="Slider label"
+                            />
+                        </div>
                     ) : label ? (
                         <span style={textColorStyle}>{label}</span>
                     ) : null}
