@@ -244,7 +244,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                         <div
                             style={{
                                 position: 'absolute',
-                                bottom: 4,
+                                bottom: 8,
                                 right: 4,
                                 display: 'flex',
                                 flexDirection: 'column',
