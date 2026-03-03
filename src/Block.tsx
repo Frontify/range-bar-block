@@ -91,7 +91,6 @@ const getIndicatorOffset = (
 export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const isEditing = useEditorState(appBridge);
     const [blockSettings, setBlockSettings] = useBlockSettings<Settings>(appBridge);
-    const blockId = appBridge.context('blockId').get();
 
     const {
         showValueLabel = true,
@@ -225,7 +224,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     };
 
     return (
-        <div data-block-id={blockId}>
+        <div className="range-slider-v2">
             {textValues.map((item, index) => (
                 <div
                     className={`${style.container}${isEditing || (showValueLabel && item.label) ? ` ${style.containerWithLabel}` : ''}`}
