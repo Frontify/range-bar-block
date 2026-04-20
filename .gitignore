@@ -4,7 +4,9 @@ dist
 .DS_Store
 .vscode
 /legacy
+/docs/PRD-feedback-fixes.md
 
 .ai/
 .github/copilot-instructions.md
+.gitigonre
 
