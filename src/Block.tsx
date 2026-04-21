@@ -5,7 +5,7 @@ import { type BlockProps } from '@frontify/guideline-blocks-settings';
 import { type CSSProperties, type FC, type ChangeEvent, useRef, useState } from 'react';
 
 import RangeSlider from './RangeSlider';
-import { divideStringByNumber, pxStringToNumber, toPixels, toRgbaString, type RgbaColor } from './helpers';
+import { dividePixelValue, pxStringToNumber, toPixels, toRgbaString, type RgbaColor } from './helpers';
 import {
     DEFAULT_INDICATOR_COLOR,
     DEFAULT_INDICATOR_SIZE,
@@ -28,7 +28,7 @@ type SliderRow = {
     label: string;
 };
 
-type Settings = {
+type RangeSliderSettings = {
     showValueLabel: boolean;
     indicatorStyle: IndicatorShape;
     indicatorSize: string;
@@ -90,7 +90,7 @@ const getIndicatorOffset = (
 
 export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const isEditing = useEditorState(appBridge);
-    const [blockSettings, setBlockSettings] = useBlockSettings<Settings>(appBridge);
+    const [blockSettings, setBlockSettings] = useBlockSettings<RangeSliderSettings>(appBridge);
 
     const {
         showValueLabel = true,
@@ -176,7 +176,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
     };
 
-    const onDelete = (index: number): void => {
+    const onDeleteRow = (index: number): void => {
         const rowId = textValues[index].id;
         const updated = textValues.filter((_, i) => i !== index);
         setTextValues(updated);
@@ -197,29 +197,29 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const indicatorSizeNum = pxStringToNumber(indicatorSize);
     const indicatorDimensions = toIndicatorSize(indicatorStyle, indicatorSize, lineHeightNum);
 
-    const customIndicatorStyles: CSSProperties = {
+    const indicatorStyles: CSSProperties = {
         background: toRgbaString(indicatorColor),
         borderRadius: indicatorDimensions.radius,
         width: indicatorDimensions.width,
         height: indicatorDimensions.height,
     };
 
-    const customLineStyles: CSSProperties = {
-        borderRadius: lineStyle === LineShape.Square ? '1px' : toPixels(divideStringByNumber(lineHeight, 2).toString()),
+    const lineStyles: CSSProperties = {
+        borderRadius: lineStyle === LineShape.Square ? '1px' : toPixels(dividePixelValue(lineHeight, 2).toString()),
         height: toPixels(lineHeight),
         background: toRgbaString(lineBackgroundColor),
     };
 
-    const customActiveLineStyles: CSSProperties = {
+    const activeLineStyles: CSSProperties = {
         borderRadius:
             lineStyle === LineShape.Square
                 ? '1px'
-                : `${toPixels(divideStringByNumber(lineHeight, 2).toString())} 0px 0px ${toPixels(divideStringByNumber(lineHeight, 2).toString())}`,
+                : `${toPixels(dividePixelValue(lineHeight, 2).toString())} 0px 0px ${toPixels(dividePixelValue(lineHeight, 2).toString())}`,
         height: toPixels(lineHeight),
         background: toRgbaString(lineActiveColor),
     };
 
-    const customTextColor: CSSProperties = {
+    const textColorStyle: CSSProperties = {
         color: toRgbaString(textColor),
     };
 
@@ -242,7 +242,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                         aria-label="Percentage value"
                                     />
                                 </div>
-                                <span className={style.percentageUnit} style={{ color: customTextColor.color }}>
+                                <span className={style.percentageUnit} style={{ color: textColorStyle.color }}>
                                     %
                                 </span>
                             </div>
@@ -263,7 +263,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                             <span
                                 title={item.left}
                                 className={style.labelTextLeft}
-                                style={{ color: customTextColor.color }}
+                                style={{ color: textColorStyle.color }}
                             >
                                 {item.left}
                             </span>
@@ -283,14 +283,14 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                     indicatorSizeNum,
                                 )}
                                 onChange={(v) => onValueChange(v as number, index)}
-                                indicatorStyles={customIndicatorStyles}
-                                lineStyles={customLineStyles}
-                                activeLineStyles={customActiveLineStyles}
+                                indicatorStyles={indicatorStyles}
+                                lineStyles={lineStyles}
+                                activeLineStyles={activeLineStyles}
                                 isEditing={isEditing}
                                 sliderAriaLabel={`Slider ${index + 1}`}
                                 label={item.label}
                                 onLabelChange={(v) => onLabelChange(v, index)}
-                                textColorStyle={customTextColor}
+                                textColorStyle={textColorStyle}
                                 showValueLabel={showValueLabel}
                             />
                         </div>
@@ -308,7 +308,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                             <span
                                 title={item.right}
                                 className={style.labelTextRight}
-                                style={{ color: customTextColor.color }}
+                                style={{ color: textColorStyle.color }}
                             >
                                 {item.right}
                             </span>
@@ -321,7 +321,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                 rounding="medium"
                                 size="small"
                                 type="button"
-                                onPress={() => onDelete(index)}
+                                onPress={() => onDeleteRow(index)}
                                 aria-label="Delete row"
                             >
                                 <IconTrashBin />

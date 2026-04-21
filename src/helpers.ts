@@ -1,13 +1,12 @@
 export type RgbaColor = { red: number; green: number; blue: number; alpha: number };
 
-export const pxStringToNumber = (string: string): number => {
-    const result = parseFloat(string);
+export const pxStringToNumber = (value: string): number => {
+    const result = parseFloat(value);
     return isNaN(result) ? 0 : result;
 };
 
-export const divideStringByNumber = (string: string, number: number): number => {
-    const stringNum: number = pxStringToNumber(string);
-    return stringNum / number;
+export const dividePixelValue = (value: string, divisor: number): number => {
+    return pxStringToNumber(value) / divisor;
 };
 
 export const toRgbaString = (color: RgbaColor): string => {

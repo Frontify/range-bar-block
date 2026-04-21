@@ -3,7 +3,7 @@ import { type ChangeEvent, type CSSProperties, type Dispatch, type FC, type SetS
 
 import style from './style.module.css';
 
-type Props = {
+type RangeSliderProps = {
     min: number;
     max: number;
     value: number;
@@ -21,7 +21,7 @@ type Props = {
     showValueLabel?: boolean;
 };
 
-const RangeSlider: FC<Props> = ({
+const RangeSlider: FC<RangeSliderProps> = ({
     min,
     max,
     value,
@@ -38,14 +38,14 @@ const RangeSlider: FC<Props> = ({
     textColorStyle,
     showValueLabel = true,
 }) => {
-    const handleMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleSliderChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         onChange(+e.target.value);
     };
 
     const halfIndicatorWidth = parseFloat(String(indicatorStyles.width ?? '16px')) / 2;
-    const maxPos = (value / max) * 100;
-    const labelLeft = `clamp(${halfIndicatorWidth}px, ${maxPos + offset}%, calc(100% - ${halfIndicatorWidth}px))`;
+    const valuePercent = (value / max) * 100;
+    const labelLeft = `clamp(${halfIndicatorWidth}px, ${valuePercent + offset}%, calc(100% - ${halfIndicatorWidth}px))`;
 
     return (
         <div className={style.sliderRoot}>
@@ -58,7 +58,7 @@ const RangeSlider: FC<Props> = ({
                         min={min}
                         max={max}
                         step={step}
-                        onChange={handleMaxChange}
+                        onChange={handleSliderChange}
                         disabled={!isEditing}
                         aria-label={sliderAriaLabel}
                     />
@@ -66,7 +66,10 @@ const RangeSlider: FC<Props> = ({
 
                 <div className={style.controlWrapper}>
                     <div className={style.rail} style={lineStyles}>
-                        <div className={style.innerRail} style={{ ...activeLineStyles, right: `${100 - maxPos}%` }} />
+                        <div
+                            className={style.innerRail}
+                            style={{ ...activeLineStyles, right: `${100 - valuePercent}%` }}
+                        />
                     </div>
                     <div className={style.control} style={{ ...indicatorStyles, left: labelLeft }} />
                 </div>
