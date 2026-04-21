@@ -8,7 +8,8 @@
         "deploy": "frontify-cli deploy --entryPath src/index.ts",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run"
     },
     "peerDependencies": {
         "@frontify/app-bridge": "^3.12.0",
@@ -26,7 +27,8 @@
         "postcss": "8.5.6",
         "postcss-modules": "6.0.1",
         "prettier": "^3.8.1",
-        "typescript": "^5.9.3"
+        "typescript": "^5.9.3",
+        "vitest": "^4.1.5"
     },
     "overrides": {
         "@udecode/plate-common": "31.3.2"

@@ -1,17 +1,9 @@
 import { type Bundle, defineSettings } from '@frontify/guideline-blocks-settings';
 
 import { pxStringToNumber } from './helpers';
+import { IndicatorShape, LineShape } from './enums';
 
-export const enum IndicatorShape {
-    Circle = 'CIRCLE',
-    Square = 'SQUARE',
-    Bar = 'BAR',
-}
-
-export const enum LineShape {
-    Round = 'ROUND',
-    Square = 'SQUARE',
-}
+export { IndicatorShape, LineShape };
 
 export const DEFAULT_LINE_STYLE = LineShape.Round;
 export const DEFAULT_LINE_HEIGHT = '5px';
