@@ -1,8 +1,8 @@
 export type RgbaColor = { red: number; green: number; blue: number; alpha: number };
 
 export const pxStringToNumber = (string: string): number => {
-    const stringdigit = string.replaceAll(/\D/g, '');
-    return +stringdigit;
+    const result = parseFloat(string);
+    return isNaN(result) ? 0 : result;
 };
 
 export const divideStringByNumber = (string: string, number: number): number => {
