@@ -40,11 +40,12 @@ const RangeSlider: FC<Props> = ({
 }) => {
     const handleMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        onChange(Math.max(+e.target.value, step));
+        onChange(+e.target.value);
     };
 
+    const halfIndicatorWidth = parseFloat(String(indicatorStyles.width ?? '16px')) / 2;
     const maxPos = (value / max) * 100;
-    const labelLeft = `${maxPos + offset}%`;
+    const labelLeft = `clamp(${halfIndicatorWidth}px, ${maxPos + offset}%, calc(100% - ${halfIndicatorWidth}px))`;
 
     return (
         <div className="slider-root">

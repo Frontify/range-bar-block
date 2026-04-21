@@ -103,8 +103,7 @@
     border-radius: 50%;
     position: absolute;
     top: 50%;
-    margin-left: calc(16px / -2);
-    transform: translate3d(0, -50%, 0);
+    transform: translate(-50%, -50%);
     z-index: 2;
 }
 
