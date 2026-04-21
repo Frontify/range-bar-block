@@ -224,7 +224,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     };
 
     return (
-        <div className="range-slider-v2">
+        <div>
             {textValues.map((item, index) => (
                 <div
                     className={`${style.container}${isEditing || (showValueLabel && item.label) ? ` ${style.containerWithLabel}` : ''}`}

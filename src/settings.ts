@@ -1,7 +1,6 @@
 import { type Bundle, defineSettings } from '@frontify/guideline-blocks-settings';
 
 import { pxStringToNumber } from './helpers';
-import { Padding } from './types';
 
 export const enum IndicatorShape {
     Circle = 'CIRCLE',
@@ -14,7 +13,6 @@ export const enum LineShape {
     Square = 'SQUARE',
 }
 
-export const DEFAULT_PADDING = Padding.Small;
 export const DEFAULT_LINE_STYLE = LineShape.Round;
 export const DEFAULT_LINE_HEIGHT = '5px';
 export const DEFAULT_LINE_COLOR = { red: 152, green: 10, blue: 121, alpha: 1, name: 'Cardinal Pink' };
