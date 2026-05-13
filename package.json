@@ -14,8 +14,7 @@
     "peerDependencies": {
         "@frontify/app-bridge": "^3.12.9",
         "@frontify/fondue": "^13.4.5",
-        "react": "^18.2.0",
-        "zustand": "^4.0.0"
+        "react": "^18.2.0"
     },
     "devDependencies": {
         "@frontify/eslint-config-react": "^1.0.16",

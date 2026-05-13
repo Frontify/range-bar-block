@@ -15,6 +15,7 @@ type RangeSliderProps = {
     activeLineStyles: CSSProperties;
     isEditing: boolean;
     sliderAriaLabel: string;
+    ariaValueText?: string;
     label?: string;
     onLabelChange?: (value: string) => void;
     textColorStyle?: CSSProperties;
@@ -33,6 +34,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
     onChange,
     isEditing,
     sliderAriaLabel,
+    ariaValueText,
     label,
     onLabelChange,
     textColorStyle,
@@ -61,6 +63,8 @@ const RangeSlider: FC<RangeSliderProps> = ({
                         onChange={handleSliderChange}
                         disabled={!isEditing}
                         aria-label={sliderAriaLabel}
+                        aria-valuetext={ariaValueText}
+                        style={{ '--thumb-size': indicatorStyles.width ?? '16px' } as CSSProperties}
                     />
                 </div>
 

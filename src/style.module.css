@@ -10,6 +10,10 @@
     padding-bottom: 48px;
 }
 
+.containerEditing {
+    padding-right: 72px;
+}
+
 .editControls {
     position: absolute;
     bottom: 8px;
@@ -47,9 +51,26 @@
     gap: 8px;
 }
 
+.sliderRowWrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.sliderRowContent {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.deleteButton {
+    flex-shrink: 0;
+    align-self: center;
+}
+
 .inputSide {
     flex: 1 1 33%;
     max-width: 100px;
+    min-width: 0;
 }
 
 .inputCenter {
@@ -58,21 +79,23 @@
 }
 
 .labelTextLeft {
-    max-width: 120px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
+    overflow: visible;
+    text-overflow: unset;
+    max-width: none;
+    flex: 1 1 0;
     display: block;
-    flex-shrink: 0;
 }
 
 .labelTextRight {
-    max-width: 100px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
+    overflow: visible;
+    text-overflow: unset;
+    max-width: none;
+    flex: 1 1 0;
     display: block;
-    flex-shrink: 0;
 }
 
 /* RangeSlider styles */
@@ -106,7 +129,7 @@
 .sliderInput {
     position: absolute;
     width: 100%;
-    pointer-events: none;
+    pointer-events: auto;
     appearance: none;
     height: 100%;
     opacity: 0;
@@ -135,8 +158,8 @@
 .sliderInput::-ms-thumb {
     appearance: none;
     pointer-events: all;
-    width: 16px;
-    height: 16px;
+    width: var(--thumb-size, 16px);
+    height: var(--thumb-size, 16px);
     border-radius: 0px;
     border: 0 none;
     cursor: grab;
@@ -146,8 +169,8 @@
 .sliderInput::-moz-range-thumb {
     appearance: none;
     pointer-events: all;
-    width: 16px;
-    height: 16px;
+    width: var(--thumb-size, 16px);
+    height: var(--thumb-size, 16px);
     border-radius: 0px;
     border: 0 none;
     cursor: grab;
@@ -157,8 +180,8 @@
 .sliderInput::-webkit-slider-thumb {
     appearance: none;
     pointer-events: all;
-    width: 16px;
-    height: 16px;
+    width: var(--thumb-size, 16px);
+    height: var(--thumb-size, 16px);
     border-radius: 0px;
     border: 0 none;
     cursor: grab;
@@ -189,6 +212,12 @@
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
+}
+
+/* Show focus ring on the visible indicator when the hidden input is focused (WCAG 2.4.7) */
+.inputWrapper:focus-within ~ .controlWrapper .control {
+    outline: 3px solid #005fcc;
+    outline-offset: 2px;
 }
 
 .valueLabel {

@@ -13,9 +13,4 @@ export const toRgbaString = (color: RgbaColor): string => {
     return `rgba(${color.red}, ${color.green}, ${color.blue}, ${color.alpha})`;
 };
 
-export const toPixels = (string: string): string => {
-    if (!string.endsWith('px')) {
-        return `${string}px`;
-    }
-    return string;
-};
+export const toPixels = (value: string): string => (value.endsWith('px') ? value : `${value}px`);

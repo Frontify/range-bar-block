@@ -32,26 +32,24 @@ export const getIndicatorOffset = (
     lineHeight: number,
     indicatorSize: number,
 ): number => {
-    if (indicatorStyle === IndicatorShape.Bar) {
-        if (lineHeight <= 2) {
-            if (isEditing) {
-                if (!row.left || !row.right) {
-                    return 1.6;
-                }
-                return 1.8;
-            }
-            return 1.2;
-        } else if (lineHeight === 3) {
-            return 1.2;
-        } else if (lineHeight >= 4 && lineHeight < 8) {
-            return 1;
+    if (indicatorStyle !== IndicatorShape.Bar) {
+        if (lineHeight > 20 && indicatorSize / lineHeight < 2) {
+            return -(indicatorSize / 10);
         }
-    } else {
-        if (lineHeight > 20) {
-            if (indicatorSize / lineHeight < 2) {
-                return -(indicatorSize / 10);
-            }
+        return 0;
+    }
+    // Bar shape
+    if (lineHeight <= 2) {
+        if (!isEditing) {
+            return 1.2;
         }
+        return !row.left || !row.right ? 1.6 : 1.8;
+    }
+    if (lineHeight === 3) {
+        return 1.2;
+    }
+    if (lineHeight >= 4 && lineHeight < 8) {
+        return 1;
     }
     return 0;
 };

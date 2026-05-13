@@ -37,6 +37,7 @@ type RangeSliderSettings = {
 export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const isEditing = useEditorState(appBridge);
     const [blockSettings, setBlockSettings] = useBlockSettings<RangeSliderSettings>(appBridge);
+    const blockId = appBridge.context('blockId').get();
 
     const {
         showValueLabel = true,
@@ -170,112 +171,132 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     };
 
     return (
-        <div>
-            {textValues.map((item, index) => (
-                <div
-                    className={`${style.container}${isEditing || (showValueLabel && item.label) ? ` ${style.containerWithLabel}` : ''}`}
-                    key={item.id}
-                >
-                    {isEditing && (
-                        <div className={style.editControls}>
-                            <div className={style.editControlsRow}>
-                                <div className={style.percentageInput}>
-                                    <TextInput
-                                        value={percentageInputs[item.id] ?? String(item.value)}
-                                        onChange={(e) => onPercentageChange(e, index)}
-                                        onBlur={() => onPercentageBlur(index)}
-                                        placeholder="0–100"
-                                        aria-label="Percentage value"
-                                    />
+        <div data-block-id={blockId ?? undefined}>
+            {textValues.map((item, index) => {
+                const sliderAriaLabel = item.label
+                    ? `${item.label}: ${item.left || 'Min'} to ${item.right || 'Max'}`
+                    : `Row ${index + 1}: ${item.left || 'Min'} to ${item.right || 'Max'}`;
+                const ariaValueText = `${item.value}% between "${item.left || 'Min'}" and "${item.right || 'Max'}"`;
+                return (
+                    <div
+                        className={`${style.container}${isEditing ? ` ${style.containerEditing}` : ''}${isEditing || (showValueLabel && item.label) ? ` ${style.containerWithLabel}` : ''}`}
+                        key={item.id}
+                    >
+                        {isEditing && (
+                            <div className={style.editControls}>
+                                <div className={style.editControlsRow}>
+                                    <div className={style.percentageInput}>
+                                        <TextInput
+                                            value={percentageInputs[item.id] ?? String(item.value)}
+                                            onChange={(e) => onPercentageChange(e, index)}
+                                            onBlur={() => onPercentageBlur(index)}
+                                            placeholder="0–100"
+                                            aria-label="Percentage value"
+                                            aria-invalid={percentageErrors[item.id] ? 'true' : undefined}
+                                            aria-describedby={
+                                                percentageErrors[item.id] ? `pct-error-${item.id}` : undefined
+                                            }
+                                        />
+                                    </div>
+                                    <span className={style.percentageUnit} style={{ color: textColorStyle.color }}>
+                                        %
+                                    </span>
                                 </div>
-                                <span className={style.percentageUnit} style={{ color: textColorStyle.color }}>
-                                    %
-                                </span>
-                            </div>
-                            {percentageErrors[item.id] && <span className={style.percentageError}>0 – 100</span>}
-                        </div>
-                    )}
-                    <div className={style.sliderRow}>
-                        {isEditing ? (
-                            <div className={style.inputSide}>
-                                <TextInput
-                                    value={item.left}
-                                    onChange={(e) => onLeftChange(e, index)}
-                                    placeholder="Min"
-                                    aria-label="Left value"
-                                />
-                            </div>
-                        ) : (
-                            <span
-                                title={item.left}
-                                className={style.labelTextLeft}
-                                style={{ color: textColorStyle.color }}
-                            >
-                                {item.left}
-                            </span>
-                        )}
-
-                        <div className={style.inputCenter}>
-                            <RangeSlider
-                                min={0}
-                                max={100}
-                                step={1}
-                                value={item.value}
-                                offset={getIndicatorOffset(
-                                    indicatorStyle,
-                                    isEditing,
-                                    textValues[index],
-                                    lineHeightNum,
-                                    indicatorSizeNum,
+                                {percentageErrors[item.id] && (
+                                    <span id={`pct-error-${item.id}`} role="alert" className={style.percentageError}>
+                                        Enter a value between 0 and 100
+                                    </span>
                                 )}
-                                onChange={(v) => onValueChange(v as number, index)}
-                                indicatorStyles={indicatorStyles}
-                                lineStyles={lineStyles}
-                                activeLineStyles={activeLineStyles}
-                                isEditing={isEditing}
-                                sliderAriaLabel={`Slider ${index + 1}`}
-                                label={item.label}
-                                onLabelChange={(v) => onLabelChange(v, index)}
-                                textColorStyle={textColorStyle}
-                                showValueLabel={showValueLabel}
-                            />
-                        </div>
-
-                        {isEditing ? (
-                            <div className={style.inputSide}>
-                                <TextInput
-                                    value={item.right}
-                                    onChange={(e) => onRightChange(e, index)}
-                                    placeholder="Max"
-                                    aria-label="Right value"
-                                />
                             </div>
-                        ) : (
-                            <span
-                                title={item.right}
-                                className={style.labelTextRight}
-                                style={{ color: textColorStyle.color }}
-                            >
-                                {item.right}
-                            </span>
                         )}
+                        <div className={style.sliderRowWrapper}>
+                            <div className={style.sliderRowContent}>
+                                <div className={style.sliderRow}>
+                                    {isEditing ? (
+                                        <div className={style.inputSide}>
+                                            <TextInput
+                                                value={item.left}
+                                                onChange={(e) => onLeftChange(e, index)}
+                                                placeholder="Min"
+                                                aria-label="Left value"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <span
+                                            title={item.left}
+                                            className={style.labelTextLeft}
+                                            style={{ color: textColorStyle.color }}
+                                        >
+                                            {item.left}
+                                        </span>
+                                    )}
 
-                        {isEditing ? (
-                            <Button
-                                hugWidth
-                                emphasis="weak"
-                                rounding="medium"
-                                size="small"
-                                type="button"
-                                onPress={() => onDeleteRow(index)}
-                                aria-label="Delete row"
-                            >
-                                <IconTrashBin />
-                            </Button>
-                        ) : null}
+                                    <div className={style.inputCenter}>
+                                        <RangeSlider
+                                            min={0}
+                                            max={100}
+                                            step={1}
+                                            value={item.value}
+                                            offset={getIndicatorOffset(
+                                                indicatorStyle,
+                                                isEditing,
+                                                textValues[index],
+                                                lineHeightNum,
+                                                indicatorSizeNum,
+                                            )}
+                                            onChange={(v) => onValueChange(v as number, index)}
+                                            indicatorStyles={indicatorStyles}
+                                            lineStyles={lineStyles}
+                                            activeLineStyles={activeLineStyles}
+                                            isEditing={isEditing}
+                                            sliderAriaLabel={sliderAriaLabel}
+                                            ariaValueText={ariaValueText}
+                                            label={item.label}
+                                            onLabelChange={(v) => onLabelChange(v, index)}
+                                            textColorStyle={textColorStyle}
+                                            showValueLabel={showValueLabel}
+                                        />
+                                    </div>
+
+                                    {isEditing ? (
+                                        <div className={style.inputSide}>
+                                            <TextInput
+                                                value={item.right}
+                                                onChange={(e) => onRightChange(e, index)}
+                                                placeholder="Max"
+                                                aria-label="Right value"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <span
+                                            title={item.right}
+                                            className={style.labelTextRight}
+                                            style={{ color: textColorStyle.color }}
+                                        >
+                                            {item.right}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                            {isEditing && (
+                                <div className={style.deleteButton}>
+                                    <Button
+                                        hugWidth
+                                        emphasis="weak"
+                                        rounding="medium"
+                                        size="small"
+                                        type="button"
+                                        onPress={() => onDeleteRow(index)}
+                                        aria-label="Delete row"
+                                    >
+                                        <IconTrashBin />
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-            ))}
+                );
+            })}
 
             {isEditing ? (
                 <Button
