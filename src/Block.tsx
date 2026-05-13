@@ -192,21 +192,22 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             onBlur={() => onPercentageBlur(index)}
                                             placeholder="0–100"
                                             aria-label="Percentage value"
-                                            aria-invalid={percentageErrors[item.id] ? 'true' : undefined}
-                                            aria-describedby={
-                                                percentageErrors[item.id] ? `pct-error-${item.id}` : undefined
-                                            }
+                                            status={percentageErrors[item.id] ? 'error' : 'neutral'}
+                                            aria-describedby={`pct-error-${item.id}`}
                                         />
                                     </div>
                                     <span className={style.percentageUnit} style={{ color: textColorStyle.color }}>
                                         %
                                     </span>
                                 </div>
-                                {percentageErrors[item.id] && (
-                                    <span id={`pct-error-${item.id}`} role="alert" className={style.percentageError}>
-                                        Enter a value between 0 and 100
-                                    </span>
-                                )}
+                                <span
+                                    id={`pct-error-${item.id}`}
+                                    role="alert"
+                                    aria-live="assertive"
+                                    className={style.percentageError}
+                                >
+                                    {percentageErrors[item.id] && 'Enter a value between 0 and 100'}
+                                </span>
                             </div>
                         )}
                         <div className={style.sliderRowWrapper}>
