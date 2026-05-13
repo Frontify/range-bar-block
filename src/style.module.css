@@ -109,21 +109,21 @@
     position: relative;
     display: flex;
     align-items: center;
-    height: calc(16px + 1.6rem);
+    height: calc(var(--thumb-size, 16px) + 1.6rem);
     width: 100%;
 }
 
 .inputWrapper {
-    width: calc(100% + 16px);
-    margin: 0 calc(16px / -2);
+    width: calc(100% + var(--thumb-size, 16px));
+    margin: 0 calc(var(--thumb-size, 16px) / -2);
     position: absolute;
-    height: 16px;
+    height: var(--thumb-size, 16px);
 }
 
 .controlWrapper {
     width: 100%;
     position: absolute;
-    height: 16px;
+    height: var(--thumb-size, 16px);
 }
 
 .sliderInput {
@@ -214,8 +214,8 @@
     z-index: 2;
 }
 
-/* Show focus ring on the visible indicator when the hidden input is focused (WCAG 2.4.7) */
-.inputWrapper:focus-within ~ .controlWrapper .control {
+/* Show focus ring on the visible indicator when the hidden input is keyboard-focused (WCAG 2.4.7) */
+.inputWrapper:has(:focus-visible) ~ .controlWrapper .control {
     outline: 3px solid #005fcc;
     outline-offset: 2px;
 }

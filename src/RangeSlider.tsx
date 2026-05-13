@@ -50,7 +50,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
     const labelLeft = `clamp(${halfIndicatorWidth}px, ${valuePercent + offset}%, calc(100% - ${halfIndicatorWidth}px))`;
 
     return (
-        <div className={style.sliderRoot}>
+        <div className={style.sliderRoot} style={{ '--thumb-size': indicatorStyles.width ?? '16px' } as CSSProperties}>
             <div className={style.wrapper}>
                 <div className={style.inputWrapper}>
                     <input
@@ -64,7 +64,6 @@ const RangeSlider: FC<RangeSliderProps> = ({
                         disabled={!isEditing}
                         aria-label={sliderAriaLabel}
                         aria-valuetext={ariaValueText}
-                        style={{ '--thumb-size': indicatorStyles.width ?? '16px' } as CSSProperties}
                     />
                 </div>
 
