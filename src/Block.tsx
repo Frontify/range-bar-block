@@ -16,7 +16,7 @@ import {
     DEFAULT_LINE_HEIGHT,
     DEFAULT_LINE_STYLE,
     DEFAULT_TEXT_COLOR,
-    IndicatorShape,
+    type IndicatorShape,
     LineShape,
 } from './settings';
 import style from './style.module.css';

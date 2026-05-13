@@ -1,7 +1,7 @@
 import { type Bundle, defineSettings } from '@frontify/guideline-blocks-settings';
 
-import { pxStringToNumber } from './helpers';
 import { IndicatorShape, LineShape } from './enums';
+import { pxStringToNumber } from './helpers';
 
 export { IndicatorShape, LineShape };
 

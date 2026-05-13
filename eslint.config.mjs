@@ -4,6 +4,9 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 
 export default defineConfig([
+    {
+        ignores: ['.ai/**', 'legacy/**', 'public/**', '**/*.md', '**/*.json', 'eslint.config.mjs'],
+    },
     frontifyConfigReact,
     {
         files: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx'],
