@@ -5,7 +5,16 @@ import globals from 'globals';
 
 export default defineConfig([
     {
-        ignores: ['.ai/**', 'legacy/**', 'public/**', '**/*.md', '**/*.json', 'eslint.config.mjs'],
+        ignores: [
+            '.ai/**',
+            'legacy/**',
+            'public/**',
+            '**/*.md',
+            '**/*.json',
+            'eslint.config.mjs',
+            'postcss.config.cjs',
+            'postcss/**',
+        ],
     },
     frontifyConfigReact,
     {

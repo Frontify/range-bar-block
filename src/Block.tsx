@@ -171,7 +171,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     };
 
     return (
-        <div data-block-id={blockId ?? undefined}>
+        <div className="range-slider-v2" range-slider-v2={blockId ?? undefined}>
             {textValues.map((item, index) => {
                 const sliderAriaLabel = item.label
                     ? `${item.label}: ${item.left || 'Min'} to ${item.right || 'Max'}`
