@@ -9,7 +9,7 @@
 }
 
 .containerWithLabel {
-    /* kept for possible future use */
+    /* spacing now handled by RangeSlider marginBottom */
     padding-bottom: 0;
 }
 
@@ -147,10 +147,7 @@
     position: relative;
 }
 
-.inputCenterWithLabel {
-    /* Reserve space for up to ~4 wrapped label lines. lh unit = one line-height of the element. */
-    padding-bottom: calc(6px + 5lh);
-}
+/* .inputCenterWithLabel — removed: label spacing handled by marginBottom on sliderRoot in RangeSlider */
 
 .labelTextLeft {
     white-space: normal;

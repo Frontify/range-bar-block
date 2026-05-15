@@ -315,15 +315,11 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                 </div>
                             </>
                         ) : (
-                            <div
-                                className={`${style.viewSliderRow}${hasLabel ? ` ${style.viewSliderRowWithLabel}` : ''}`}
-                            >
+                            <div className={style.viewSliderRow}>
                                 <span title={item.left} className={style.labelTextLeft} style={textColorStyle}>
                                     {item.left}
                                 </span>
-                                <div
-                                    className={`${style.inputCenter}${hasLabel ? ` ${style.inputCenterWithLabel}` : ''}`}
-                                >
+                                <div className={style.inputCenter}>
                                     <RangeSlider
                                         min={0}
                                         max={100}

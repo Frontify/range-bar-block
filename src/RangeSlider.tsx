@@ -1,4 +1,12 @@
-import { type ChangeEvent, type CSSProperties, type Dispatch, type FC, type SetStateAction } from 'react';
+import {
+    type ChangeEvent,
+    type CSSProperties,
+    type Dispatch,
+    type FC,
+    type SetStateAction,
+    useEffect,
+    useRef,
+} from 'react';
 
 import style from './style.module.css';
 
@@ -37,6 +45,30 @@ const RangeSlider: FC<RangeSliderProps> = ({
     textColorStyle,
     showValueLabel = true,
 }) => {
+    const labelRef = useRef<HTMLDivElement>(null);
+    const sliderRootRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const labelEl = labelRef.current;
+        const rootEl = sliderRootRef.current;
+        if (!rootEl) {
+            return;
+        }
+        if (!labelEl) {
+            rootEl.style.marginBottom = '';
+            return;
+        }
+        const applyMargin = () => {
+            rootEl.style.marginBottom = `${labelEl.offsetHeight + 2}px`;
+        };
+        const ro = new ResizeObserver(applyMargin);
+        ro.observe(labelEl);
+        applyMargin();
+        return () => {
+            ro.disconnect();
+        };
+    }, [label, isEditing, showValueLabel]);
+
     const handleSliderChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         onChange(+e.target.value);
@@ -47,7 +79,11 @@ const RangeSlider: FC<RangeSliderProps> = ({
     const labelLeft = `clamp(${halfIndicatorWidth}px, ${valuePercent + offset}%, calc(100% - ${halfIndicatorWidth}px))`;
 
     return (
-        <div className={style.sliderRoot} style={{ '--thumb-size': indicatorStyles.width ?? '16px' } as CSSProperties}>
+        <div
+            ref={sliderRootRef}
+            className={style.sliderRoot}
+            style={{ '--thumb-size': indicatorStyles.width ?? '16px' } as CSSProperties}
+        >
             <div className={style.wrapper}>
                 <div className={style.inputWrapper}>
                     <input
@@ -76,7 +112,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
             </div>
 
             {!isEditing && showValueLabel && label && (
-                <div className={style.valueLabel} style={{ left: labelLeft }}>
+                <div ref={labelRef} className={style.valueLabel} style={{ left: labelLeft }}>
                     <span style={textColorStyle}>{label}</span>
                 </div>
             )}
