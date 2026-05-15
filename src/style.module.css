@@ -1,4 +1,6 @@
 .container {
+    container-type: inline-size;
+    container-name: slider-block;
     position: relative;
     box-sizing: border-box;
     width: 100%;
@@ -7,22 +9,88 @@
 }
 
 .containerWithLabel {
-    padding-bottom: 48px;
+    /* kept for possible future use */
+    padding-bottom: 0;
 }
 
-.containerEditing {
-    padding-right: 72px;
+.editInputRow {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
 }
 
-.editControls {
-    position: absolute;
-    bottom: 8px;
-    right: 4px;
+.editInputRow .inputSideTextarea {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.editSliderRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.editLabelRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.editLabelRow .inputSideTextarea {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.inputSideTextarea {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 5px 8px;
+    border: 1px solid var(--f-color-line-strong, rgba(0, 0, 0, 0.15));
+    border-radius: 4px;
+    resize: none;
+    field-sizing: content;
+    min-height: 32px;
+    color: inherit;
+    background-color: var(--f-color-base-white, #fff);
+    width: 100%;
+}
+
+.inputSideTextarea:focus {
+    outline: none;
+    border-color: var(--f-color-interactive-element-default, #5731d6);
+    box-shadow: 0 0 0 2px rgba(87, 49, 214, 0.2);
+}
+
+.inputSideTextarea::placeholder {
+    color: var(--f-color-text-weak, rgba(0, 0, 0, 0.4));
+}
+
+/* Wide-only: Min / Max textareas rendered inside editSliderRow */
+.inputSideWideOnly {
+    display: none;
+    flex: none;
+    width: 90px;
+}
+
+.percentageControl {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 2px;
-    z-index: 2;
+}
+
+.viewSliderRow {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.viewLabelRow {
+    /* unused — label is now rendered by RangeSlider using .valueLabel */
 }
 
 .editControlsRow {
@@ -45,21 +113,24 @@
     line-height: 1;
 }
 
-.sliderRow {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+/* Remove sliderRow / sliderRowWrapper / sliderRowContent — replaced by editSliderRow / viewSliderRow */
+
+/* @container queries: wide ≥ 480px */
+@container slider-block (min-width: 480px) {
+    .editInputRow {
+        display: none;
+    }
+
+    .inputSideWideOnly {
+        display: block;
+    }
 }
 
-.sliderRowWrapper {
-    display: flex;
-    align-items: flex-start;
-    gap: 4px;
-}
-
-.sliderRowContent {
-    flex: 1 1 0;
-    min-width: 0;
+/* Narrow view mode: row gap tweak */
+@container slider-block (max-width: 479px) {
+    .viewSliderRow {
+        gap: 6px;
+    }
 }
 
 .deleteButton {
@@ -67,35 +138,40 @@
     align-self: center;
 }
 
-.inputSide {
-    flex: 1 1 33%;
-    max-width: 100px;
+.inputCenter {
+    flex: 1 1 0;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
 }
 
-.inputCenter {
-    flex: 1 1 33%;
-    min-width: 0;
+.inputCenterWithLabel {
+    /* Reserve space for up to ~4 wrapped label lines. lh unit = one line-height of the element. */
+    padding-bottom: calc(6px + 5lh);
 }
 
 .labelTextLeft {
     white-space: normal;
     word-break: break-word;
-    overflow: visible;
-    text-overflow: unset;
-    max-width: none;
-    flex: 1 1 0;
+    overflow-wrap: anywhere;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 28%;
     display: block;
+    text-align: left;
 }
 
 .labelTextRight {
     white-space: normal;
     word-break: break-word;
-    overflow: visible;
-    text-overflow: unset;
-    max-width: none;
-    flex: 1 1 0;
+    overflow-wrap: anywhere;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 28%;
     display: block;
+    text-align: right;
 }
 
 /* RangeSlider styles */
@@ -224,11 +300,11 @@
     position: absolute;
     top: 100%;
     transform: translateX(-50%);
-    padding-top: 4px;
-    white-space: nowrap;
+    padding-top: 6px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    text-align: center;
+    max-width: min(140px, 80%);
     z-index: 1;
-}
-
-.valueLabelInput {
-    width: 100px;
 }

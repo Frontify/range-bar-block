@@ -69,12 +69,12 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         }, 500);
     };
 
-    const onLeftChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    const onLeftChange = (e: ChangeEvent<HTMLTextAreaElement>, index: number) => {
         const updated = textValues.map((row, i) => (i === index ? { ...row, left: e.target.value } : row));
         saveDebounced(updated);
     };
 
-    const onRightChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    const onRightChange = (e: ChangeEvent<HTMLTextAreaElement>, index: number) => {
         const updated = textValues.map((row, i) => (i === index ? { ...row, right: e.target.value } : row));
         saveDebounced(updated);
     };
@@ -177,61 +177,52 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                     ? `${item.label}: ${item.left || 'Min'} to ${item.right || 'Max'}`
                     : `Row ${index + 1}: ${item.left || 'Min'} to ${item.right || 'Max'}`;
                 const ariaValueText = `${item.value}% between "${item.left || 'Min'}" and "${item.right || 'Max'}"`;
+                const halfIndicatorWidth = pxStringToNumber(indicatorDimensions.width) / 2;
+                const viewLabelOffset = getIndicatorOffset(
+                    indicatorStyle,
+                    false,
+                    item,
+                    lineHeightNum,
+                    indicatorSizeNum,
+                );
+                const viewLabelLeft = `clamp(${halfIndicatorWidth}px, ${item.value + viewLabelOffset}%, calc(100% - ${halfIndicatorWidth}px))`;
+                const hasLabel = showValueLabel && !!item.label;
                 return (
-                    <div
-                        className={`${style.container}${isEditing ? ` ${style.containerEditing}` : ''}${isEditing || (showValueLabel && item.label) ? ` ${style.containerWithLabel}` : ''}`}
-                        key={item.id}
-                    >
-                        {isEditing && (
-                            <div className={style.editControls}>
-                                <div className={style.editControlsRow}>
-                                    <div className={style.percentageInput}>
-                                        <TextInput
-                                            value={percentageInputs[item.id] ?? String(item.value)}
-                                            onChange={(e) => onPercentageChange(e, index)}
-                                            onBlur={() => onPercentageBlur(index)}
-                                            placeholder="0–100"
-                                            aria-label="Percentage value"
-                                            status={percentageErrors[item.id] ? 'error' : 'neutral'}
-                                            aria-describedby={`pct-error-${item.id}`}
-                                        />
-                                    </div>
-                                    <span className={style.percentageUnit} style={{ color: textColorStyle.color }}>
-                                        %
-                                    </span>
+                    <div className={`${style.container}`} key={item.id}>
+                        {isEditing ? (
+                            <>
+                                {/* Row 1 (narrow): Min / Max textareas */}
+                                <div className={style.editInputRow}>
+                                    <textarea
+                                        className={style.inputSideTextarea}
+                                        value={item.left}
+                                        onChange={(e) => onLeftChange(e, index)}
+                                        placeholder="Min"
+                                        rows={1}
+                                        aria-label="Left value"
+                                    />
+                                    <textarea
+                                        className={style.inputSideTextarea}
+                                        value={item.right}
+                                        onChange={(e) => onRightChange(e, index)}
+                                        placeholder="Max"
+                                        rows={1}
+                                        aria-label="Right value"
+                                    />
                                 </div>
-                                <span
-                                    id={`pct-error-${item.id}`}
-                                    role="alert"
-                                    aria-live="assertive"
-                                    className={style.percentageError}
-                                >
-                                    {percentageErrors[item.id] && 'Enter a value between 0 and 100'}
-                                </span>
-                            </div>
-                        )}
-                        <div className={style.sliderRowWrapper}>
-                            <div className={style.sliderRowContent}>
-                                <div className={style.sliderRow}>
-                                    {isEditing ? (
-                                        <div className={style.inputSide}>
-                                            <TextInput
-                                                value={item.left}
-                                                onChange={(e) => onLeftChange(e, index)}
-                                                placeholder="Min"
-                                                aria-label="Left value"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <span
-                                            title={item.left}
-                                            className={style.labelTextLeft}
-                                            style={{ color: textColorStyle.color }}
-                                        >
-                                            {item.left}
-                                        </span>
-                                    )}
 
+                                {/* Row 2: Slider + Delete (wide: Min | Slider | Max | Delete) */}
+                                <div className={style.editSliderRow}>
+                                    <textarea
+                                        className={`${style.inputSideTextarea} ${style.inputSideWideOnly}`}
+                                        value={item.left}
+                                        onChange={(e) => onLeftChange(e, index)}
+                                        placeholder="Min"
+                                        rows={1}
+                                        aria-label="Left value"
+                                        tabIndex={-1}
+                                        aria-hidden="true"
+                                    />
                                     <div className={style.inputCenter}>
                                         <RangeSlider
                                             min={0}
@@ -252,49 +243,116 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             isEditing={isEditing}
                                             sliderAriaLabel={sliderAriaLabel}
                                             ariaValueText={ariaValueText}
-                                            label={item.label}
-                                            onLabelChange={(v) => onLabelChange(v, index)}
-                                            textColorStyle={textColorStyle}
-                                            showValueLabel={showValueLabel}
+                                            showValueLabel={false}
                                         />
                                     </div>
-
-                                    {isEditing ? (
-                                        <div className={style.inputSide}>
-                                            <TextInput
-                                                value={item.right}
-                                                onChange={(e) => onRightChange(e, index)}
-                                                placeholder="Max"
-                                                aria-label="Right value"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <span
-                                            title={item.right}
-                                            className={style.labelTextRight}
-                                            style={{ color: textColorStyle.color }}
+                                    <textarea
+                                        className={`${style.inputSideTextarea} ${style.inputSideWideOnly}`}
+                                        value={item.right}
+                                        onChange={(e) => onRightChange(e, index)}
+                                        placeholder="Max"
+                                        rows={1}
+                                        aria-label="Right value"
+                                        tabIndex={-1}
+                                        aria-hidden="true"
+                                    />
+                                    <div className={style.deleteButton}>
+                                        <Button
+                                            hugWidth
+                                            emphasis="weak"
+                                            rounding="medium"
+                                            size="small"
+                                            type="button"
+                                            onPress={() => onDeleteRow(index)}
+                                            aria-label="Delete row"
                                         >
-                                            {item.right}
-                                        </span>
+                                            <IconTrashBin />
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                {/* Row 3: Label textarea + % input */}
+                                <div className={style.editLabelRow}>
+                                    {showValueLabel && (
+                                        <textarea
+                                            className={style.inputSideTextarea}
+                                            value={item.label ?? ''}
+                                            onChange={(e) => onLabelChange(e.target.value, index)}
+                                            placeholder="Label"
+                                            rows={1}
+                                            aria-label="Slider label"
+                                        />
                                     )}
+                                    <div className={style.percentageControl}>
+                                        <div className={style.editControlsRow}>
+                                            <div className={style.percentageInput}>
+                                                <TextInput
+                                                    value={percentageInputs[item.id] ?? String(item.value)}
+                                                    onChange={(e) => onPercentageChange(e, index)}
+                                                    onBlur={() => onPercentageBlur(index)}
+                                                    placeholder="0–100"
+                                                    aria-label="Percentage value"
+                                                    status={percentageErrors[item.id] ? 'error' : 'neutral'}
+                                                    aria-describedby={`pct-error-${item.id}`}
+                                                />
+                                            </div>
+                                            <span
+                                                className={style.percentageUnit}
+                                                style={{ color: textColorStyle.color }}
+                                            >
+                                                %
+                                            </span>
+                                        </div>
+                                        <span
+                                            id={`pct-error-${item.id}`}
+                                            role="alert"
+                                            aria-live="assertive"
+                                            className={style.percentageError}
+                                        >
+                                            {percentageErrors[item.id] && 'Enter a value between 0 and 100'}
+                                        </span>
+                                    </div>
                                 </div>
+                            </>
+                        ) : (
+                            <div
+                                className={`${style.viewSliderRow}${hasLabel ? ` ${style.viewSliderRowWithLabel}` : ''}`}
+                            >
+                                <span title={item.left} className={style.labelTextLeft} style={textColorStyle}>
+                                    {item.left}
+                                </span>
+                                <div
+                                    className={`${style.inputCenter}${hasLabel ? ` ${style.inputCenterWithLabel}` : ''}`}
+                                >
+                                    <RangeSlider
+                                        min={0}
+                                        max={100}
+                                        step={1}
+                                        value={item.value}
+                                        offset={getIndicatorOffset(
+                                            indicatorStyle,
+                                            isEditing,
+                                            textValues[index],
+                                            lineHeightNum,
+                                            indicatorSizeNum,
+                                        )}
+                                        onChange={(v) => onValueChange(v as number, index)}
+                                        indicatorStyles={indicatorStyles}
+                                        lineStyles={lineStyles}
+                                        activeLineStyles={activeLineStyles}
+                                        isEditing={isEditing}
+                                        sliderAriaLabel={sliderAriaLabel}
+                                        ariaValueText={ariaValueText}
+                                        label={item.label}
+                                        textColorStyle={textColorStyle}
+                                        showValueLabel={showValueLabel}
+                                    />
+                                </div>
+                                <span title={item.right} className={style.labelTextRight} style={textColorStyle}>
+                                    {item.right}
+                                </span>
                             </div>
-                            {isEditing && (
-                                <div className={style.deleteButton}>
-                                    <Button
-                                        hugWidth
-                                        emphasis="weak"
-                                        rounding="medium"
-                                        size="small"
-                                        type="button"
-                                        onPress={() => onDeleteRow(index)}
-                                        aria-label="Delete row"
-                                    >
-                                        <IconTrashBin />
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
+                        )}
                     </div>
                 );
             })}

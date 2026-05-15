@@ -1,4 +1,3 @@
-import { TextInput } from '@frontify/fondue/components';
 import { type ChangeEvent, type CSSProperties, type Dispatch, type FC, type SetStateAction } from 'react';
 
 import style from './style.module.css';
@@ -17,7 +16,6 @@ type RangeSliderProps = {
     sliderAriaLabel: string;
     ariaValueText?: string;
     label?: string;
-    onLabelChange?: (value: string) => void;
     textColorStyle?: CSSProperties;
     showValueLabel?: boolean;
 };
@@ -36,7 +34,6 @@ const RangeSlider: FC<RangeSliderProps> = ({
     sliderAriaLabel,
     ariaValueText,
     label,
-    onLabelChange,
     textColorStyle,
     showValueLabel = true,
 }) => {
@@ -78,20 +75,9 @@ const RangeSlider: FC<RangeSliderProps> = ({
                 </div>
             </div>
 
-            {showValueLabel && (
+            {!isEditing && showValueLabel && label && (
                 <div className={style.valueLabel} style={{ left: labelLeft }}>
-                    {isEditing ? (
-                        <div className={style.valueLabelInput}>
-                            <TextInput
-                                placeholder="Label"
-                                value={label ?? ''}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => onLabelChange?.(e.target.value)}
-                                aria-label="Slider label"
-                            />
-                        </div>
-                    ) : label ? (
-                        <span style={textColorStyle}>{label}</span>
-                    ) : null}
+                    <span style={textColorStyle}>{label}</span>
                 </div>
             )}
         </div>
