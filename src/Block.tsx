@@ -178,15 +178,8 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                     : `Row ${index + 1}: ${item.left || 'Min'} to ${item.right || 'Max'}`;
                 const ariaValueText = `${item.value}% between "${item.left || 'Min'}" and "${item.right || 'Max'}"`;
                 const halfIndicatorWidth = pxStringToNumber(indicatorDimensions.width) / 2;
-                const viewLabelOffset = getIndicatorOffset(
-                    indicatorStyle,
-                    false,
-                    item,
-                    lineHeightNum,
-                    indicatorSizeNum,
-                );
-                const viewLabelLeft = `clamp(${halfIndicatorWidth}px, ${item.value + viewLabelOffset}%, calc(100% - ${halfIndicatorWidth}px))`;
-                const hasLabel = showValueLabel && !!item.label;
+                const editOffset = getIndicatorOffset(indicatorStyle, true, item, lineHeightNum, indicatorSizeNum);
+                const editLabelLeft = `clamp(${halfIndicatorWidth}px, ${item.value + editOffset}%, calc(100% - ${halfIndicatorWidth}px))`;
                 return (
                     <div className={`${style.container}`} key={item.id}>
                         {isEditing ? (
@@ -245,6 +238,20 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             ariaValueText={ariaValueText}
                                             showValueLabel={false}
                                         />
+                                        {showValueLabel && (
+                                            <textarea
+                                                className={`${style.inputSideTextarea} ${style.editLabelFloating}`}
+                                                style={{
+                                                    left: editLabelLeft,
+                                                    transform: `translateX(-${item.value}%)`,
+                                                }}
+                                                value={item.label ?? ''}
+                                                onChange={(e) => onLabelChange(e.target.value, index)}
+                                                placeholder="Label"
+                                                rows={1}
+                                                aria-label="Slider label"
+                                            />
+                                        )}
                                     </div>
                                     <textarea
                                         className={`${style.inputSideTextarea} ${style.inputSideWideOnly}`}
@@ -271,11 +278,11 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                     </div>
                                 </div>
 
-                                {/* Row 3: Label textarea + % input */}
+                                {/* Row 3: Label textarea (narrow) + % input */}
                                 <div className={style.editLabelRow}>
                                     {showValueLabel && (
                                         <textarea
-                                            className={style.inputSideTextarea}
+                                            className={`${style.inputSideTextarea} ${style.editLabelInline}`}
                                             value={item.label ?? ''}
                                             onChange={(e) => onLabelChange(e.target.value, index)}
                                             placeholder="Label"

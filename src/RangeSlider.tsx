@@ -104,7 +104,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
                     <div className={style.rail} style={lineStyles}>
                         <div
                             className={style.innerRail}
-                            style={{ ...activeLineStyles, right: `${100 - valuePercent}%` }}
+                            style={{ ...activeLineStyles, right: `calc(100% - ${labelLeft})` }}
                         />
                     </div>
                     <div className={style.control} style={{ ...indicatorStyles, left: labelLeft }} />

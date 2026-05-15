@@ -72,7 +72,7 @@
 .inputSideWideOnly {
     display: none;
     flex: none;
-    width: 90px;
+    width: 120px;
 }
 
 .percentageControl {
@@ -89,9 +89,7 @@
     gap: 8px;
 }
 
-.viewLabelRow {
-    /* unused — label is now rendered by RangeSlider using .valueLabel */
-}
+/* .viewLabelRow — unused, label is rendered by RangeSlider using .valueLabel */
 
 .editControlsRow {
     display: flex;
@@ -115,6 +113,22 @@
 
 /* Remove sliderRow / sliderRowWrapper / sliderRowContent — replaced by editSliderRow / viewSliderRow */
 
+/* Floating label: follows slider indicator. Hidden by default; shown in wide via @container. */
+.editLabelFloating {
+    display: none;
+    position: absolute;
+    top: 100%;
+    margin-top: 4px;
+    width: 120px;
+    z-index: 2;
+}
+
+/* In-flow Row 3 label: visible by default (narrow); hidden in wide via @container. */
+.editLabelInline {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
 /* @container queries: wide ≥ 480px */
 @container slider-block (min-width: 480px) {
     .editInputRow {
@@ -123,6 +137,22 @@
 
     .inputSideWideOnly {
         display: block;
+    }
+
+    /* Show floating label below slider */
+    .editLabelFloating {
+        display: block;
+    }
+
+    /* Hide in-flow Row 3 label (floating takes over) */
+    .editLabelInline {
+        display: none;
+    }
+
+    /* Push Row 3 down so the floating label has room, and right-align the % control */
+    .editLabelRow {
+        margin-top: 48px;
+        justify-content: flex-end;
     }
 }
 
@@ -146,8 +176,6 @@
     justify-content: center;
     position: relative;
 }
-
-/* .inputCenterWithLabel — removed: label spacing handled by marginBottom on sliderRoot in RangeSlider */
 
 .labelTextLeft {
     white-space: normal;
