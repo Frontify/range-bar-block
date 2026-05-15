@@ -180,6 +180,9 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                 const halfIndicatorWidth = pxStringToNumber(indicatorDimensions.width) / 2;
                 const editOffset = getIndicatorOffset(indicatorStyle, true, item, lineHeightNum, indicatorSizeNum);
                 const editLabelLeft = `clamp(${halfIndicatorWidth}px, ${item.value + editOffset}%, calc(100% - ${halfIndicatorWidth}px))`;
+                // Piecewise-linear translate: ramps 0→-50% over value 0-20, holds -50% from 20-80, ramps -50%→-100% over 80-100
+                const editLabelTranslate =
+                    item.value <= 20 ? item.value * 2.5 : item.value >= 80 ? 50 + (item.value - 80) * 2.5 : 50;
                 return (
                     <div className={`${style.container}`} key={item.id}>
                         {isEditing ? (
@@ -243,7 +246,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                                 className={`${style.inputSideTextarea} ${style.editLabelFloating}`}
                                                 style={{
                                                     left: editLabelLeft,
-                                                    transform: `translateX(-${item.value}%)`,
+                                                    transform: `translateX(-${editLabelTranslate}%)`,
                                                 }}
                                                 value={item.label ?? ''}
                                                 onChange={(e) => onLabelChange(e.target.value, index)}
