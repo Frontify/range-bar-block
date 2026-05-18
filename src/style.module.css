@@ -19,9 +19,17 @@
     margin-bottom: 6px;
 }
 
-.editInputRow .inputSideTextarea {
+.editInputRowItem {
     flex: 1 1 0;
     min-width: 0;
+}
+
+/* Auto-grow textareas inside Fondue Textarea wrappers */
+.editInputRowItem textarea,
+.inputSideWideOnly textarea,
+.editLabelFloating textarea,
+.editLabelInline textarea {
+    field-sizing: content;
 }
 
 .editSliderRow {
@@ -35,11 +43,6 @@
     align-items: flex-start;
     gap: 8px;
     margin-top: 6px;
-}
-
-.editLabelRow .inputSideTextarea {
-    flex: 1 1 0;
-    min-width: 0;
 }
 
 .inputSideTextarea {

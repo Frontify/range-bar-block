@@ -1,5 +1,5 @@
 import { useBlockSettings, useEditorState } from '@frontify/app-bridge';
-import { Button, TextInput } from '@frontify/fondue/components';
+import { Button, TextInput, Textarea } from '@frontify/fondue/components';
 import { IconPlus, IconTrashBin } from '@frontify/fondue/icons';
 import { type BlockProps } from '@frontify/guideline-blocks-settings';
 import { type CSSProperties, type FC, type ChangeEvent, useRef, useState } from 'react';
@@ -189,36 +189,34 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                             <>
                                 {/* Row 1 (narrow): Min / Max textareas */}
                                 <div className={style.editInputRow}>
-                                    <textarea
-                                        className={style.inputSideTextarea}
-                                        value={item.left}
-                                        onChange={(e) => onLeftChange(e, index)}
-                                        placeholder="Min"
-                                        rows={1}
-                                        aria-label="Left value"
-                                    />
-                                    <textarea
-                                        className={style.inputSideTextarea}
-                                        value={item.right}
-                                        onChange={(e) => onRightChange(e, index)}
-                                        placeholder="Max"
-                                        rows={1}
-                                        aria-label="Right value"
-                                    />
+                                    <div className={style.editInputRowItem}>
+                                        <Textarea
+                                            value={item.left}
+                                            onChange={(e) => onLeftChange(e, index)}
+                                            placeholder="Min"
+                                            minRows={1}
+                                        />
+                                    </div>
+                                    <div className={style.editInputRowItem}>
+                                        <Textarea
+                                            value={item.right}
+                                            onChange={(e) => onRightChange(e, index)}
+                                            placeholder="Max"
+                                            minRows={1}
+                                        />
+                                    </div>
                                 </div>
 
                                 {/* Row 2: Slider + Delete (wide: Min | Slider | Max | Delete) */}
                                 <div className={style.editSliderRow}>
-                                    <textarea
-                                        className={`${style.inputSideTextarea} ${style.inputSideWideOnly}`}
-                                        value={item.left}
-                                        onChange={(e) => onLeftChange(e, index)}
-                                        placeholder="Min"
-                                        rows={1}
-                                        aria-label="Left value"
-                                        tabIndex={-1}
-                                        aria-hidden="true"
-                                    />
+                                    <div className={style.inputSideWideOnly} aria-hidden="true">
+                                        <Textarea
+                                            value={item.left}
+                                            onChange={(e) => onLeftChange(e, index)}
+                                            placeholder="Min"
+                                            minRows={1}
+                                        />
+                                    </div>
                                     <div className={style.inputCenter}>
                                         <RangeSlider
                                             min={0}
@@ -242,30 +240,30 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             showValueLabel={false}
                                         />
                                         {showValueLabel && (
-                                            <textarea
-                                                className={`${style.inputSideTextarea} ${style.editLabelFloating}`}
+                                            <div
+                                                className={style.editLabelFloating}
                                                 style={{
                                                     left: editLabelLeft,
                                                     transform: `translateX(-${editLabelTranslate}%)`,
                                                 }}
-                                                value={item.label ?? ''}
-                                                onChange={(e) => onLabelChange(e.target.value, index)}
-                                                placeholder="Label"
-                                                rows={1}
-                                                aria-label="Slider label"
-                                            />
+                                            >
+                                                <Textarea
+                                                    value={item.label ?? ''}
+                                                    onChange={(e) => onLabelChange(e.target.value, index)}
+                                                    placeholder="Label"
+                                                    minRows={1}
+                                                />
+                                            </div>
                                         )}
                                     </div>
-                                    <textarea
-                                        className={`${style.inputSideTextarea} ${style.inputSideWideOnly}`}
-                                        value={item.right}
-                                        onChange={(e) => onRightChange(e, index)}
-                                        placeholder="Max"
-                                        rows={1}
-                                        aria-label="Right value"
-                                        tabIndex={-1}
-                                        aria-hidden="true"
-                                    />
+                                    <div className={style.inputSideWideOnly} aria-hidden="true">
+                                        <Textarea
+                                            value={item.right}
+                                            onChange={(e) => onRightChange(e, index)}
+                                            placeholder="Max"
+                                            minRows={1}
+                                        />
+                                    </div>
                                     <div className={style.deleteButton}>
                                         <Button
                                             hugWidth
@@ -284,14 +282,14 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                 {/* Row 3: Label textarea (narrow) + % input */}
                                 <div className={style.editLabelRow}>
                                     {showValueLabel && (
-                                        <textarea
-                                            className={`${style.inputSideTextarea} ${style.editLabelInline}`}
-                                            value={item.label ?? ''}
-                                            onChange={(e) => onLabelChange(e.target.value, index)}
-                                            placeholder="Label"
-                                            rows={1}
-                                            aria-label="Slider label"
-                                        />
+                                        <div className={style.editLabelInline}>
+                                            <Textarea
+                                                value={item.label ?? ''}
+                                                onChange={(e) => onLabelChange(e.target.value, index)}
+                                                placeholder="Label"
+                                                minRows={1}
+                                            />
+                                        </div>
                                     )}
                                     <div className={style.percentageControl}>
                                         <div className={style.editControlsRow}>
