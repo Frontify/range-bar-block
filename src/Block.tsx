@@ -443,7 +443,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                                 setLabelHeights((prev) => ({ ...prev, [item.id]: h }))
                                             }
                                             labelPaddingTop={(() => {
-                                                const BASE = 6;
+                                                const BASE = 9;
                                                 const leftH = spanHeights[item.id]?.left ?? 0;
                                                 const rightH = spanHeights[item.id]?.right ?? 0;
                                                 const relevantH =

@@ -120,7 +120,7 @@
     display: none;
     position: absolute;
     top: 100%;
-    margin-top: 4px;
+    margin-top: 8px;
     width: 120px;
     z-index: 2;
 }
@@ -331,7 +331,7 @@
     position: absolute;
     top: 100%;
     transform: translateX(-50%);
-    padding-top: 6px;
+    padding-top: 9px;
     white-space: normal;
     word-break: break-word;
     overflow-wrap: anywhere;
