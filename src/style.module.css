@@ -74,8 +74,7 @@
 /* Wide-only: Min / Max textareas rendered inside editSliderRow */
 .inputSideWideOnly {
     display: none;
-    flex: none;
-    width: 120px;
+    min-width: 0;
 }
 
 .percentageControl {
@@ -136,6 +135,12 @@
 @container slider-block (min-width: 480px) {
     .editInputRow {
         display: none;
+    }
+
+    /* Switch to grid so both side columns share the same 1fr track — always equal, no hardcoded width */
+    .editSliderRow {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 3fr) minmax(0, 1fr) auto;
     }
 
     .inputSideWideOnly {

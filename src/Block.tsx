@@ -2,7 +2,7 @@ import { useBlockSettings, useEditorState } from '@frontify/app-bridge';
 import { Button, TextInput, Textarea } from '@frontify/fondue/components';
 import { IconPlus, IconTrashBin } from '@frontify/fondue/icons';
 import { type BlockProps } from '@frontify/guideline-blocks-settings';
-import { type CSSProperties, type FC, type ChangeEvent, useRef, useState } from 'react';
+import { type CSSProperties, type FC, type ChangeEvent, useLayoutEffect, useRef, useState } from 'react';
 
 import RangeSlider from './RangeSlider';
 import { dividePixelValue, pxStringToNumber, toPixels, toRgbaString, type RgbaColor } from './helpers';
@@ -58,6 +58,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     );
     const [percentageErrors, setPercentageErrors] = useState<Record<string, boolean>>({});
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const inputRowRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
     const saveDebounced = (rows: SliderRow[]) => {
         setTextValues(rows);
@@ -140,6 +141,29 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
     };
 
+    useLayoutEffect(() => {
+        if (!isEditing) {
+            return;
+        }
+        for (const row of textValues) {
+            const rowEl = inputRowRef.current.get(row.id);
+            if (!rowEl) {
+                continue;
+            }
+            const textareas = Array.from(rowEl.querySelectorAll<HTMLTextAreaElement>('textarea'));
+            if (textareas.length < 2) {
+                continue;
+            }
+            for (const ta of textareas) {
+                ta.style.height = '';
+            }
+            const maxH = Math.max(...textareas.map((ta) => ta.scrollHeight));
+            for (const ta of textareas) {
+                ta.style.height = `${maxH}px`;
+            }
+        }
+    }, [textValues, isEditing]);
+
     const lineHeightNum = pxStringToNumber(lineHeight);
     const indicatorSizeNum = pxStringToNumber(indicatorSize);
     const indicatorDimensions = toIndicatorSize(indicatorStyle, indicatorSize, lineHeightNum);
@@ -188,7 +212,16 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                         {isEditing ? (
                             <>
                                 {/* Row 1 (narrow): Min / Max textareas */}
-                                <div className={style.editInputRow}>
+                                <div
+                                    className={style.editInputRow}
+                                    ref={(el) => {
+                                        if (el) {
+                                            inputRowRef.current.set(item.id, el);
+                                        } else {
+                                            inputRowRef.current.delete(item.id);
+                                        }
+                                    }}
+                                >
                                     <div className={style.editInputRowItem}>
                                         <Textarea
                                             value={item.left}
