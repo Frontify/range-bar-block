@@ -407,8 +407,11 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                 <div className={style.viewSliderRow}>
                                     <span
                                         ref={(el) => {
-                                            if (el) leftSpanRef.current.set(item.id, el);
-                                            else leftSpanRef.current.delete(item.id);
+                                            if (el) {
+                                                leftSpanRef.current.set(item.id, el);
+                                            } else {
+                                                leftSpanRef.current.delete(item.id);
+                                            }
                                         }}
                                         title={item.left}
                                         className={style.labelTextLeft}
@@ -443,7 +446,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                                 setLabelHeights((prev) => ({ ...prev, [item.id]: h }))
                                             }
                                             labelPaddingTop={(() => {
-                                                const BASE = 9;
+                                                const BASE = 15;
                                                 const leftH = spanHeights[item.id]?.left ?? 0;
                                                 const rightH = spanHeights[item.id]?.right ?? 0;
                                                 const relevantH =
@@ -454,8 +457,11 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                     </div>
                                     <span
                                         ref={(el) => {
-                                            if (el) rightSpanRef.current.set(item.id, el);
-                                            else rightSpanRef.current.delete(item.id);
+                                            if (el) {
+                                                rightSpanRef.current.set(item.id, el);
+                                            } else {
+                                                rightSpanRef.current.delete(item.id);
+                                            }
                                         }}
                                         title={item.right}
                                         className={style.labelTextRight}
