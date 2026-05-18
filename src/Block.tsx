@@ -59,10 +59,12 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const [percentageErrors, setPercentageErrors] = useState<Record<string, boolean>>({});
     const [labelHeights, setLabelHeights] = useState<Record<string, number>>({});
     const [spanHeights, setSpanHeights] = useState<Record<string, { left: number; right: number }>>({});
+    const [containerWidths, setContainerWidths] = useState<Record<string, number>>({});
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const inputRowRef = useRef<Map<string, HTMLDivElement>>(new Map());
     const leftSpanRef = useRef<Map<string, HTMLElement>>(new Map());
     const rightSpanRef = useRef<Map<string, HTMLElement>>(new Map());
+    const containerRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
     const saveDebounced = (rows: SliderRow[]) => {
         setTextValues(rows);
@@ -207,6 +209,29 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         };
     }, [textValues, isEditing]);
 
+    useEffect(() => {
+        if (isEditing) {
+            return;
+        }
+        const observers: ResizeObserver[] = [];
+        for (const row of textValues) {
+            const el = containerRef.current.get(row.id);
+            if (el) {
+                const ro = new ResizeObserver(() => {
+                    setContainerWidths((prev) => ({ ...prev, [row.id]: el.offsetWidth }));
+                });
+                ro.observe(el);
+                observers.push(ro);
+                setContainerWidths((prev) => ({ ...prev, [row.id]: el.offsetWidth }));
+            }
+        }
+        return () => {
+            for (const ro of observers) {
+                ro.disconnect();
+            }
+        };
+    }, [textValues, isEditing]);
+
     const lineHeightNum = pxStringToNumber(lineHeight);
     const indicatorSizeNum = pxStringToNumber(indicatorSize);
     const indicatorDimensions = toIndicatorSize(indicatorStyle, indicatorSize, lineHeightNum);
@@ -255,6 +280,13 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                         className={`${style.container}`}
                         key={item.id}
                         style={{ '--thumb-size': indicatorDimensions.width } as CSSProperties}
+                        ref={(el) => {
+                            if (el) {
+                                containerRef.current.set(item.id, el);
+                            } else {
+                                containerRef.current.delete(item.id);
+                            }
+                        }}
                     >
                         {isEditing ? (
                             <>
@@ -449,8 +481,17 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                                 const DESIRED_GAP = 10;
                                                 const leftH = spanHeights[item.id]?.left ?? 0;
                                                 const rightH = spanHeights[item.id]?.right ?? 0;
-                                                const relevantH =
-                                                    item.value <= 20 ? leftH : item.value >= 80 ? rightH : 0;
+                                                // For narrow containers (≤480px, i.e. 3–4 Frontify columns),
+                                                // compensate for both sides at all slider positions because
+                                                // tall wrapped text can overlap the label anywhere on the track.
+                                                const isNarrow = (containerWidths[item.id] ?? 9999) <= 480;
+                                                const relevantH = isNarrow
+                                                    ? Math.max(leftH, rightH)
+                                                    : item.value <= 20
+                                                      ? leftH
+                                                      : item.value >= 80
+                                                        ? rightH
+                                                        : 0;
                                                 // Add desired gap ON TOP of the overlap compensation.
                                                 // Math.max prevents a negative term when span is shorter than thumb.
                                                 const overlap = Math.max(0, (relevantH - indicatorSizeNum) / 2);
