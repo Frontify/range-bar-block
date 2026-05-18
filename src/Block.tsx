@@ -2,7 +2,7 @@ import { useBlockSettings, useEditorState } from '@frontify/app-bridge';
 import { Button, TextInput, Textarea } from '@frontify/fondue/components';
 import { IconPlus, IconTrashBin } from '@frontify/fondue/icons';
 import { type BlockProps } from '@frontify/guideline-blocks-settings';
-import { type CSSProperties, type FC, type ChangeEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { type CSSProperties, type FC, type ChangeEvent, useLayoutEffect, useRef, useState } from 'react';
 
 import RangeSlider from './RangeSlider';
 import { dividePixelValue, pxStringToNumber, toPixels, toRgbaString, type RgbaColor } from './helpers';
@@ -58,11 +58,8 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     );
     const [percentageErrors, setPercentageErrors] = useState<Record<string, boolean>>({});
     const [labelHeights, setLabelHeights] = useState<Record<string, number>>({});
-    const [spanHeights, setSpanHeights] = useState<Record<string, { left: number; right: number }>>({});
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const inputRowRef = useRef<Map<string, HTMLDivElement>>(new Map());
-    const leftSpanRef = useRef<Map<string, HTMLElement>>(new Map());
-    const rightSpanRef = useRef<Map<string, HTMLElement>>(new Map());
 
     const saveDebounced = (rows: SliderRow[]) => {
         setTextValues(rows);
@@ -166,45 +163,6 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                 ta.style.height = `${maxH}px`;
             }
         }
-    }, [textValues, isEditing]);
-
-    // Track heights of left/right side spans in view mode so we can push the value
-    // label further down when the slider is near an edge (0-20% or 80-100%) and the
-    // side text is tall enough to overlap with the label.
-    useEffect(() => {
-        if (isEditing) {
-            return;
-        }
-        const observers: ResizeObserver[] = [];
-        const measure = () => {
-            setSpanHeights((prev) => {
-                const next = { ...prev };
-                for (const row of textValues) {
-                    const leftEl = leftSpanRef.current.get(row.id);
-                    const rightEl = rightSpanRef.current.get(row.id);
-                    next[row.id] = {
-                        left: leftEl?.offsetHeight ?? 0,
-                        right: rightEl?.offsetHeight ?? 0,
-                    };
-                }
-                return next;
-            });
-        };
-        for (const row of textValues) {
-            for (const el of [leftSpanRef.current.get(row.id), rightSpanRef.current.get(row.id)]) {
-                if (el) {
-                    const ro = new ResizeObserver(measure);
-                    ro.observe(el);
-                    observers.push(ro);
-                }
-            }
-        }
-        measure();
-        return () => {
-            for (const ro of observers) {
-                ro.disconnect();
-            }
-        };
     }, [textValues, isEditing]);
 
     const lineHeightNum = pxStringToNumber(lineHeight);
@@ -405,18 +363,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                         ) : (
                             <>
                                 <div className={style.viewSliderRow}>
-                                    <span
-                                        ref={(el) => {
-                                            if (el) {
-                                                leftSpanRef.current.set(item.id, el);
-                                            } else {
-                                                leftSpanRef.current.delete(item.id);
-                                            }
-                                        }}
-                                        title={item.left}
-                                        className={style.labelTextLeft}
-                                        style={textColorStyle}
-                                    >
+                                    <span title={item.left} className={style.labelTextLeft} style={textColorStyle}>
                                         {item.left}
                                     </span>
                                     <div className={style.inputCenter}>
@@ -445,28 +392,9 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             onLabelHeight={(h) =>
                                                 setLabelHeights((prev) => ({ ...prev, [item.id]: h }))
                                             }
-                                            labelPaddingTop={(() => {
-                                                const BASE = 6;
-                                                const leftH = spanHeights[item.id]?.left ?? 0;
-                                                const rightH = spanHeights[item.id]?.right ?? 0;
-                                                const relevantH =
-                                                    item.value <= 20 ? leftH : item.value >= 80 ? rightH : 0;
-                                                return Math.max(BASE, (relevantH - indicatorSizeNum) / 2);
-                                            })()}
                                         />
                                     </div>
-                                    <span
-                                        ref={(el) => {
-                                            if (el) {
-                                                rightSpanRef.current.set(item.id, el);
-                                            } else {
-                                                rightSpanRef.current.delete(item.id);
-                                            }
-                                        }}
-                                        title={item.right}
-                                        className={style.labelTextRight}
-                                        style={textColorStyle}
-                                    >
+                                    <span title={item.right} className={style.labelTextRight} style={textColorStyle}>
                                         {item.right}
                                     </span>
                                 </div>
