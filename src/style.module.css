@@ -336,6 +336,6 @@
     word-break: break-word;
     overflow-wrap: anywhere;
     text-align: center;
-    max-width: min(140px, 80%);
+    width: 140px;
     z-index: 1;
 }

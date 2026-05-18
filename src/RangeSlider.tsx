@@ -27,6 +27,7 @@ type RangeSliderProps = {
     textColorStyle?: CSSProperties;
     showValueLabel?: boolean;
     onLabelHeight?: (height: number) => void;
+    labelPaddingTop?: number;
 };
 
 const RangeSlider: FC<RangeSliderProps> = ({
@@ -46,6 +47,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
     textColorStyle,
     showValueLabel = true,
     onLabelHeight,
+    labelPaddingTop,
 }) => {
     const labelRef = useRef<HTMLDivElement>(null);
     const onLabelHeightRef = useRef(onLabelHeight);
@@ -110,7 +112,11 @@ const RangeSlider: FC<RangeSliderProps> = ({
             </div>
 
             {!isEditing && showValueLabel && label && (
-                <div ref={labelRef} className={style.valueLabel} style={{ left: labelLeft }}>
+                <div
+                    ref={labelRef}
+                    className={style.valueLabel}
+                    style={{ left: labelLeft, paddingTop: labelPaddingTop ?? 6 }}
+                >
                     <span style={textColorStyle}>{label}</span>
                 </div>
             )}
