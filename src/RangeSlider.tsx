@@ -115,7 +115,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
                 <div
                     ref={labelRef}
                     className={style.valueLabel}
-                    style={{ left: labelLeft, paddingTop: labelPaddingTop ?? 15 }}
+                    style={{ left: labelLeft, paddingTop: labelPaddingTop ?? 10 }}
                 >
                     <span style={textColorStyle}>{label}</span>
                 </div>

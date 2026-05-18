@@ -446,12 +446,15 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                                 setLabelHeights((prev) => ({ ...prev, [item.id]: h }))
                                             }
                                             labelPaddingTop={(() => {
-                                                const BASE = 15;
+                                                const DESIRED_GAP = 10;
                                                 const leftH = spanHeights[item.id]?.left ?? 0;
                                                 const rightH = spanHeights[item.id]?.right ?? 0;
                                                 const relevantH =
                                                     item.value <= 20 ? leftH : item.value >= 80 ? rightH : 0;
-                                                return Math.max(BASE, (relevantH - indicatorSizeNum) / 2);
+                                                // Add desired gap ON TOP of the overlap compensation.
+                                                // Math.max prevents a negative term when span is shorter than thumb.
+                                                const overlap = Math.max(0, (relevantH - indicatorSizeNum) / 2);
+                                                return DESIRED_GAP + overlap;
                                             })()}
                                         />
                                     </div>

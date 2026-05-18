@@ -88,7 +88,7 @@
 .viewSliderRow {
     display: flex;
     align-items: center;
-    gap: px;
+    gap: 8px;
 }
 
 /* .viewLabelRow — unused, label is rendered by RangeSlider using .valueLabel */
@@ -331,7 +331,7 @@
     position: absolute;
     top: 100%;
     transform: translateX(-50%);
-    padding-top: 15px;
+    padding-top: 10px;
     white-space: normal;
     word-break: break-word;
     overflow-wrap: anywhere;
