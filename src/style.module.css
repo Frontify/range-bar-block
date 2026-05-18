@@ -87,7 +87,7 @@
 
 .viewSliderRow {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     gap: 8px;
 }
 
@@ -192,7 +192,6 @@
     flex: 0 1 auto;
     min-width: 0;
     max-width: 28%;
-    display: block;
     text-align: left;
 }
 
@@ -203,7 +202,6 @@
     flex: 0 1 auto;
     min-width: 0;
     max-width: 28%;
-    display: block;
     text-align: right;
 }
 
@@ -218,7 +216,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    height: calc(var(--thumb-size, 16px) + 1.6rem);
+    height: var(--thumb-size, 16px);
     width: 100%;
 }
 

@@ -57,6 +57,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         Object.fromEntries(savedTextValues.map((r) => [r.id, String(r.value)])),
     );
     const [percentageErrors, setPercentageErrors] = useState<Record<string, boolean>>({});
+    const [labelHeights, setLabelHeights] = useState<Record<string, number>>({});
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const inputRowRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -208,7 +209,11 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                 const editLabelTranslate =
                     item.value <= 20 ? item.value * 2.5 : item.value >= 80 ? 50 + (item.value - 80) * 2.5 : 50;
                 return (
-                    <div className={`${style.container}`} key={item.id}>
+                    <div
+                        className={`${style.container}`}
+                        key={item.id}
+                        style={{ '--thumb-size': indicatorDimensions.width } as CSSProperties}
+                    >
                         {isEditing ? (
                             <>
                                 {/* Row 1 (narrow): Min / Max textareas */}
@@ -356,39 +361,45 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                 </div>
                             </>
                         ) : (
-                            <div className={style.viewSliderRow}>
-                                <span title={item.left} className={style.labelTextLeft} style={textColorStyle}>
-                                    {item.left}
-                                </span>
-                                <div className={style.inputCenter}>
-                                    <RangeSlider
-                                        min={0}
-                                        max={100}
-                                        step={1}
-                                        value={item.value}
-                                        offset={getIndicatorOffset(
-                                            indicatorStyle,
-                                            isEditing,
-                                            textValues[index],
-                                            lineHeightNum,
-                                            indicatorSizeNum,
-                                        )}
-                                        onChange={(v) => onValueChange(v as number, index)}
-                                        indicatorStyles={indicatorStyles}
-                                        lineStyles={lineStyles}
-                                        activeLineStyles={activeLineStyles}
-                                        isEditing={isEditing}
-                                        sliderAriaLabel={sliderAriaLabel}
-                                        ariaValueText={ariaValueText}
-                                        label={item.label}
-                                        textColorStyle={textColorStyle}
-                                        showValueLabel={showValueLabel}
-                                    />
+                            <>
+                                <div className={style.viewSliderRow}>
+                                    <span title={item.left} className={style.labelTextLeft} style={textColorStyle}>
+                                        {item.left}
+                                    </span>
+                                    <div className={style.inputCenter}>
+                                        <RangeSlider
+                                            min={0}
+                                            max={100}
+                                            step={1}
+                                            value={item.value}
+                                            offset={getIndicatorOffset(
+                                                indicatorStyle,
+                                                isEditing,
+                                                textValues[index],
+                                                lineHeightNum,
+                                                indicatorSizeNum,
+                                            )}
+                                            onChange={(v) => onValueChange(v as number, index)}
+                                            indicatorStyles={indicatorStyles}
+                                            lineStyles={lineStyles}
+                                            activeLineStyles={activeLineStyles}
+                                            isEditing={isEditing}
+                                            sliderAriaLabel={sliderAriaLabel}
+                                            ariaValueText={ariaValueText}
+                                            label={item.label}
+                                            textColorStyle={textColorStyle}
+                                            showValueLabel={showValueLabel}
+                                            onLabelHeight={(h) =>
+                                                setLabelHeights((prev) => ({ ...prev, [item.id]: h }))
+                                            }
+                                        />
+                                    </div>
+                                    <span title={item.right} className={style.labelTextRight} style={textColorStyle}>
+                                        {item.right}
+                                    </span>
                                 </div>
-                                <span title={item.right} className={style.labelTextRight} style={textColorStyle}>
-                                    {item.right}
-                                </span>
-                            </div>
+                                <div style={{ height: labelHeights[item.id] ?? 0 }} />
+                            </>
                         )}
                     </div>
                 );

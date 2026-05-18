@@ -26,6 +26,7 @@ type RangeSliderProps = {
     label?: string;
     textColorStyle?: CSSProperties;
     showValueLabel?: boolean;
+    onLabelHeight?: (height: number) => void;
 };
 
 const RangeSlider: FC<RangeSliderProps> = ({
@@ -44,26 +45,27 @@ const RangeSlider: FC<RangeSliderProps> = ({
     label,
     textColorStyle,
     showValueLabel = true,
+    onLabelHeight,
 }) => {
     const labelRef = useRef<HTMLDivElement>(null);
-    const sliderRootRef = useRef<HTMLDivElement>(null);
+    const onLabelHeightRef = useRef(onLabelHeight);
+
+    useEffect(() => {
+        onLabelHeightRef.current = onLabelHeight;
+    });
 
     useEffect(() => {
         const labelEl = labelRef.current;
-        const rootEl = sliderRootRef.current;
-        if (!rootEl) {
-            return;
-        }
         if (!labelEl) {
-            rootEl.style.marginBottom = '';
+            onLabelHeightRef.current?.(0);
             return;
         }
-        const applyMargin = () => {
-            rootEl.style.marginBottom = `${labelEl.offsetHeight + 2}px`;
+        const apply = () => {
+            onLabelHeightRef.current?.(labelEl.offsetHeight + 2);
         };
-        const ro = new ResizeObserver(applyMargin);
+        const ro = new ResizeObserver(apply);
         ro.observe(labelEl);
-        applyMargin();
+        apply();
         return () => {
             ro.disconnect();
         };
@@ -79,11 +81,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
     const labelLeft = `clamp(${halfIndicatorWidth}px, ${valuePercent + offset}%, calc(100% - ${halfIndicatorWidth}px))`;
 
     return (
-        <div
-            ref={sliderRootRef}
-            className={style.sliderRoot}
-            style={{ '--thumb-size': indicatorStyles.width ?? '16px' } as CSSProperties}
-        >
+        <div className={style.sliderRoot} style={{ '--thumb-size': indicatorStyles.width ?? '16px' } as CSSProperties}>
             <div className={style.wrapper}>
                 <div className={style.inputWrapper}>
                     <input
