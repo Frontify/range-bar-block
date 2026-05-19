@@ -2,7 +2,16 @@ import { useBlockSettings, useEditorState } from '@frontify/app-bridge';
 import { Button, TextInput, Textarea } from '@frontify/fondue/components';
 import { IconPlus, IconTrashBin } from '@frontify/fondue/icons';
 import { type BlockProps } from '@frontify/guideline-blocks-settings';
-import { type CSSProperties, type FC, type ChangeEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+    type CSSProperties,
+    type FC,
+    type ChangeEvent,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
 import RangeSlider from './RangeSlider';
 import { dividePixelValue, pxStringToNumber, toPixels, toRgbaString, type RgbaColor } from './helpers';
@@ -231,35 +240,47 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         return () => ro.disconnect();
     }, [rows, isEditing]);
 
-    const lineHeightNum = pxStringToNumber(lineHeight);
-    const indicatorSizeNum = pxStringToNumber(indicatorSize);
-    const indicatorDimensions = toIndicatorSize(indicatorStyle, indicatorSize, lineHeightNum);
+    const lineHeightNum = useMemo(() => pxStringToNumber(lineHeight), [lineHeight]);
+    const indicatorSizeNum = useMemo(() => pxStringToNumber(indicatorSize), [indicatorSize]);
+    const indicatorDimensions = useMemo(
+        () => toIndicatorSize(indicatorStyle, indicatorSize, lineHeightNum),
+        [indicatorStyle, indicatorSize, lineHeightNum],
+    );
 
-    const indicatorStyles: CSSProperties = {
-        background: toRgbaString(indicatorColor),
-        borderRadius: indicatorDimensions.radius,
-        width: indicatorDimensions.width,
-        height: indicatorDimensions.height,
-    };
+    const indicatorStyles: CSSProperties = useMemo(
+        () => ({
+            background: toRgbaString(indicatorColor),
+            borderRadius: indicatorDimensions.radius,
+            width: indicatorDimensions.width,
+            height: indicatorDimensions.height,
+        }),
+        [indicatorColor, indicatorDimensions],
+    );
 
-    const lineStyles: CSSProperties = {
-        borderRadius: lineStyle === LineShape.Square ? '1px' : toPixels(dividePixelValue(lineHeight, 2).toString()),
-        height: toPixels(lineHeight),
-        background: toRgbaString(lineBackgroundColor),
-    };
+    const lineStyles: CSSProperties = useMemo(
+        () => ({
+            borderRadius: lineStyle === LineShape.Square ? '1px' : toPixels(dividePixelValue(lineHeight, 2).toString()),
+            height: toPixels(lineHeight),
+            background: toRgbaString(lineBackgroundColor),
+        }),
+        [lineStyle, lineHeight, lineBackgroundColor],
+    );
 
-    const activeLineStyles: CSSProperties = {
-        borderRadius:
-            lineStyle === LineShape.Square
-                ? '1px'
-                : `${toPixels(dividePixelValue(lineHeight, 2).toString())} 0px 0px ${toPixels(dividePixelValue(lineHeight, 2).toString())}`,
-        height: toPixels(lineHeight),
-        background: toRgbaString(lineActiveColor),
-    };
+    const activeLineStyles: CSSProperties = useMemo(
+        () => ({
+            borderRadius:
+                lineStyle === LineShape.Square
+                    ? '1px'
+                    : `${toPixels(dividePixelValue(lineHeight, 2).toString())} 0px 0px ${toPixels(dividePixelValue(lineHeight, 2).toString())}`,
+            height: toPixels(lineHeight),
+            background: toRgbaString(lineActiveColor),
+        }),
+        [lineStyle, lineHeight, lineActiveColor],
+    );
 
-    const textColorStyle: CSSProperties = {
-        color: toRgbaString(textColor),
-    };
+    const textColorStyle: CSSProperties = useMemo(() => ({ color: toRgbaString(textColor) }), [textColor]);
+
+    const halfIndicatorWidth = pxStringToNumber(indicatorDimensions.width) / 2;
 
     return (
         <div className="range-slider-v2" range-slider-v2={blockId ?? undefined}>
@@ -268,7 +289,6 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                     ? `${item.label}: ${item.left || 'Min'} to ${item.right || 'Max'}`
                     : `Row ${index + 1}: ${item.left || 'Min'} to ${item.right || 'Max'}`;
                 const ariaValueText = `${item.value}% between "${item.left || 'Min'}" and "${item.right || 'Max'}"`;
-                const halfIndicatorWidth = pxStringToNumber(indicatorDimensions.width) / 2;
                 const editOffset = getIndicatorOffset(indicatorStyle, true, item, lineHeightNum, indicatorSizeNum);
                 const editLabelLeft = `clamp(${halfIndicatorWidth}px, ${item.value + editOffset}%, calc(100% - ${halfIndicatorWidth}px))`;
                 // Piecewise-linear translate: ramps 0→-50% over value 0-20, holds -50% from 20-80, ramps -50%→-100% over 80-100
