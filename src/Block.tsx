@@ -6,6 +6,7 @@ import {
     type CSSProperties,
     type FC,
     type ChangeEvent,
+    useCallback,
     useEffect,
     useLayoutEffect,
     useMemo,
@@ -91,15 +92,28 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const rightSpanRef = useRef<Map<string, HTMLElement>>(new Map());
     const containerRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
-    const saveDebounced = (updatedRows: SliderRow[]) => {
-        setRows(updatedRows);
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
+    const saveDebounced = useCallback(
+        (updatedRows: SliderRow[]) => {
+            setRows(updatedRows);
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+            timerRef.current = setTimeout(() => {
+                timerRef.current = null;
+                setBlockSettings({ textValues: updatedRows }).catch(console.error);
+            }, 500);
+        },
+        [setBlockSettings],
+    );
+
+    // Re-sync local rows if blockSettings change externally (e.g. collaborative editing)
+    // and there is no pending local save in flight.
+    useEffect(() => {
+        if (!timerRef.current) {
+            setRows(savedTextValues);
+            setPercentageInputs(Object.fromEntries(savedTextValues.map((r) => [r.id, String(r.value)])));
         }
-        timerRef.current = setTimeout(() => {
-            setBlockSettings({ textValues: updatedRows }).catch(console.error);
-        }, 500);
-    };
+    }, [savedTextValues]);
 
     const onLeftChange = (e: ChangeEvent<HTMLTextAreaElement>, index: number) => {
         const updated = rows.map((row, i) => (i === index ? { ...row, left: e.target.value } : row));
