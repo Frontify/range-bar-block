@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 
-import { IndicatorShape } from './enums';
-import { pxStringToNumber, dividePixelValue, toPixels, toRgbaString } from './helpers';
-import { toIndicatorSize, getIndicatorOffset, type SliderRow } from './indicatorHelpers';
+import { IndicatorShape } from '../enums';
+import { pxStringToNumber, dividePixelValue, toPixels, toRgbaString } from '../helpers';
+import { toIndicatorSize, getIndicatorOffset, type SliderRow } from '../indicatorHelpers';
 
 describe('pxStringToNumber', () => {
     it('converts an integer px string', () => {

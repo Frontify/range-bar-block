@@ -2,13 +2,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { type CSSProperties } from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import RangeSlider from './RangeSlider';
+import RangeSlider from '../RangeSlider';
 
 // ---------------------------------------------------------------------------
 // Mocks
 // ---------------------------------------------------------------------------
 
-vi.mock('./style.module.css', () => ({
+vi.mock('../style.module.css', () => ({
     default: new Proxy({} as Record<string | symbol, string>, {
         get: (_t: Record<string | symbol, string>, key: string | symbol): string => String(key),
     }),
@@ -55,7 +55,7 @@ describe('RangeSlider', () => {
     });
 
     it('renders the value label when showValueLabel=true and label is provided', () => {
-        render(<RangeSlider {...defaultProps} showValueLabel={true} label="Midpoint" isEditing={false} />);
+        render(<RangeSlider {...defaultProps} showValueLabel label="Midpoint" isEditing={false} />);
         expect(screen.getByText('Midpoint')).toBeInTheDocument();
     });
 
@@ -65,13 +65,16 @@ describe('RangeSlider', () => {
     });
 
     it('does not render the value label when isEditing=true', () => {
-        render(<RangeSlider {...defaultProps} showValueLabel={true} label="Midpoint" isEditing={true} />);
+        render(<RangeSlider {...defaultProps} showValueLabel label="Midpoint" isEditing />);
         expect(screen.queryByText('Midpoint')).not.toBeInTheDocument();
     });
 
     it('does not render the value label when label is not provided', () => {
-        render(<RangeSlider {...defaultProps} showValueLabel={true} label={undefined} isEditing={false} />);
-        expect(screen.queryByRole('generic', { name: /midpoint/i })).not.toBeInTheDocument();
+        const { container } = render(
+            <RangeSlider {...defaultProps} showValueLabel label={undefined} isEditing={false} />,
+        );
+        // The CSS proxy returns the key name as the class, so style.valueLabel === 'valueLabel'
+        expect(container.querySelector('.valueLabel')).not.toBeInTheDocument();
     });
 
     it('sets --thumb-size CSS variable on the root element', () => {
@@ -88,7 +91,7 @@ describe('RangeSlider', () => {
     });
 
     it('slider input is enabled when editing', () => {
-        render(<RangeSlider {...defaultProps} isEditing={true} />);
+        render(<RangeSlider {...defaultProps} isEditing />);
         expect(screen.getByRole('slider')).not.toBeDisabled();
     });
 

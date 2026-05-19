@@ -2,15 +2,15 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { RangeSliderBlock } from './Block';
-import { type SliderRow } from './indicatorHelpers';
+import { RangeSliderBlock } from '../Block';
+import { type SliderRow } from '../indicatorHelpers';
 
 // ---------------------------------------------------------------------------
 // Mocks
 // ---------------------------------------------------------------------------
 
 // Stub CSS modules — return an empty proxy so className lookups don't throw
-vi.mock('./style.module.css', () => ({
+vi.mock('../style.module.css', () => ({
     default: new Proxy({} as Record<string | symbol, string>, {
         get: (_t: Record<string | symbol, string>, key: string | symbol): string => String(key),
     }),
@@ -94,7 +94,7 @@ vi.mock('@frontify/fondue/icons', () => ({
 }));
 
 // Stub RangeSlider — we test it separately
-vi.mock('./RangeSlider', () => ({
+vi.mock('../RangeSlider', () => ({
     default: ({ sliderAriaLabel }: { sliderAriaLabel: string }) => <input type="range" aria-label={sliderAriaLabel} />,
 }));
 
