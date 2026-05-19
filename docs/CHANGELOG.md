@@ -70,3 +70,28 @@ A numeric percentage input field is displayed in edit mode (bottom-right of each
 - Labels (left/right) in view mode use `text-overflow: ellipsis` with constrained `max-width` to prevent layout breakage on long text.
 - Editing inputs use flex-based layout (`inputSide`, `inputCenter`) instead of the legacy `Stack` component with fixed percentages.
 - Proper spacing via `gap` instead of inline `margin`/`minWidth`/`maxWidth` style hacks.
+
+---
+
+## 3. Review Fixes (May 2026)
+
+### 3.1 Accessibility
+
+- **Focus indicator**: visible outline (3 px `#005fcc`) added to the custom indicator when the underlying `<input type="range">` receives keyboard focus via `:has(:focus-visible)` sibling selector (WCAG 2.4.7).
+- **Drag hit-target**: native range thumb resized to match the configured indicator size via `--thumb-size` CSS variable, so the grabbable area and the visible dot are congruent.
+- **Percentage error announcement**: error `<span>` given `role="alert"`; input linked via `aria-invalid` and `aria-describedby` so assistive tech announces validation failures.
+- **Slider aria-label**: now includes left/right label context (`"Label: Min to Max"`); `aria-valuetext` set to `"N% between 'Min' and 'Max'"`.
+
+### 3.2 Edit mode layout
+
+- Reworked UI for narrow (< 480 px) columns: Min/Max textareas moved to a dedicated row above the slider; floating label and wide-only duplicates shown only at ≥ 480 px via `@container` queries.
+- Percentage input no longer overflows the container; constrained via flex layout and fixed `52px` width.
+- Trash-bin button placed in its own `auto` grid column so it never overlaps the Max text.
+- Left/right text inputs now share equal height in narrow view; content wraps instead of being clipped.
+
+### 3.3 Code quality
+
+- Component-level tests added for `Block.tsx` (debounce, add/delete row, percentage validation) and `RangeSlider.tsx` (46 tests total, all passing).
+- `saveDebounced` receives updated rows as a parameter — no stale closure capture.
+- External `savedTextValues` re-syncs local state when no save is in flight (collaborative editing support).
+- Updated `@frontify/fondue` to `^13.5.0`.
