@@ -51,7 +51,7 @@ export const settings = defineSettings({
                     rules: [
                         {
                             errorMessage: "Please use a numerical value with or without 'px'",
-                            validate: (value: string) => value.match(/^-?\d+(?:px)?$/g) !== null,
+                            validate: (value: string) => /^\d+(?:px)?$/.test(value),
                         },
                     ],
                     clearable: false,
@@ -114,7 +114,7 @@ export const settings = defineSettings({
                     rules: [
                         {
                             errorMessage: "Please use a numerical value with or without 'px'",
-                            validate: (value: string) => value.match(/^-?\d+(?:px)?$/g) !== null,
+                            validate: (value: string) => /^\d+(?:px)?$/.test(value),
                         },
                     ],
                     clearable: false,

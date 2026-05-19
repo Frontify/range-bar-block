@@ -66,13 +66,13 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const rightSpanRef = useRef<Map<string, HTMLElement>>(new Map());
     const containerRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
-    const saveDebounced = (rows: SliderRow[]) => {
-        setRows(rows);
+    const saveDebounced = (updatedRows: SliderRow[]) => {
+        setRows(updatedRows);
         if (timerRef.current) {
             clearTimeout(timerRef.current);
         }
         timerRef.current = setTimeout(() => {
-            setBlockSettings({ ...blockSettings, textValues: rows }).catch(console.error);
+            setBlockSettings({ textValues: updatedRows }).catch(console.error);
         }, 500);
     };
 
@@ -103,7 +103,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
             return;
         }
         const num = parseInt(raw, 10);
-        const isValid = !isNaN(num) && num >= 0 && num <= 100 && /^\d+$/.test(raw);
+        const isValid = !isNaN(num) && num >= 0 && num <= 100 && /^(0|[1-9]\d*)$/.test(raw);
         setPercentageErrors((prev) => ({ ...prev, [rowId]: !isValid }));
         if (isValid) {
             const updated = rows.map((row, i) => (i === index ? { ...row, value: num } : row));
@@ -127,7 +127,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         const updated = [...rows, newRow];
         setRows(updated);
         setPercentageInputs((prev) => ({ ...prev, [newRow.id]: '50' }));
-        setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
+        setBlockSettings({ textValues: updated }).catch(console.error);
     };
 
     const onDeleteRow = (index: number): void => {
@@ -144,7 +144,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
             delete n[rowId];
             return n;
         });
-        setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
+        setBlockSettings({ textValues: updated }).catch(console.error);
     };
 
     useLayoutEffect(() => {
