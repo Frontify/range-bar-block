@@ -52,7 +52,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         textColor = DEFAULT_TEXT_COLOR,
     } = blockSettings;
 
-    const [textValues, setTextValues] = useState<SliderRow[]>(savedTextValues);
+    const [rows, setRows] = useState<SliderRow[]>(savedTextValues);
     const [percentageInputs, setPercentageInputs] = useState<Record<string, string>>(
         Object.fromEntries(savedTextValues.map((r) => [r.id, String(r.value)])),
     );
@@ -67,7 +67,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const containerRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
     const saveDebounced = (rows: SliderRow[]) => {
-        setTextValues(rows);
+        setRows(rows);
         if (timerRef.current) {
             clearTimeout(timerRef.current);
         }
@@ -77,25 +77,25 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     };
 
     const onLeftChange = (e: ChangeEvent<HTMLTextAreaElement>, index: number) => {
-        const updated = textValues.map((row, i) => (i === index ? { ...row, left: e.target.value } : row));
+        const updated = rows.map((row, i) => (i === index ? { ...row, left: e.target.value } : row));
         saveDebounced(updated);
     };
 
     const onRightChange = (e: ChangeEvent<HTMLTextAreaElement>, index: number) => {
-        const updated = textValues.map((row, i) => (i === index ? { ...row, right: e.target.value } : row));
+        const updated = rows.map((row, i) => (i === index ? { ...row, right: e.target.value } : row));
         saveDebounced(updated);
     };
 
     const onValueChange = (value: number, index: number) => {
-        const rowId = textValues[index].id;
-        const updated = textValues.map((row, i) => (i === index ? { ...row, value } : row));
+        const rowId = rows[index].id;
+        const updated = rows.map((row, i) => (i === index ? { ...row, value } : row));
         setPercentageInputs((prev) => ({ ...prev, [rowId]: String(value) }));
         setPercentageErrors((prev) => ({ ...prev, [rowId]: false }));
         saveDebounced(updated);
     };
 
     const onPercentageChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-        const rowId = textValues[index].id;
+        const rowId = rows[index].id;
         const raw = e.target.value;
         setPercentageInputs((prev) => ({ ...prev, [rowId]: raw }));
         if (raw === '') {
@@ -106,34 +106,34 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         const isValid = !isNaN(num) && num >= 0 && num <= 100 && /^\d+$/.test(raw);
         setPercentageErrors((prev) => ({ ...prev, [rowId]: !isValid }));
         if (isValid) {
-            const updated = textValues.map((row, i) => (i === index ? { ...row, value: num } : row));
+            const updated = rows.map((row, i) => (i === index ? { ...row, value: num } : row));
             saveDebounced(updated);
         }
     };
 
     const onPercentageBlur = (index: number) => {
-        const row = textValues[index];
+        const row = rows[index];
         setPercentageInputs((prev) => ({ ...prev, [row.id]: String(row.value) }));
         setPercentageErrors((prev) => ({ ...prev, [row.id]: false }));
     };
 
     const onLabelChange = (value: string, index: number) => {
-        const updated = textValues.map((row, i) => (i === index ? { ...row, label: value } : row));
+        const updated = rows.map((row, i) => (i === index ? { ...row, label: value } : row));
         saveDebounced(updated);
     };
 
     const onAddRow = (): void => {
         const newRow = { id: crypto.randomUUID(), value: 50, left: '', right: '', label: '' };
-        const updated = [...textValues, newRow];
-        setTextValues(updated);
+        const updated = [...rows, newRow];
+        setRows(updated);
         setPercentageInputs((prev) => ({ ...prev, [newRow.id]: '50' }));
         setBlockSettings({ ...blockSettings, textValues: updated }).catch(console.error);
     };
 
     const onDeleteRow = (index: number): void => {
-        const rowId = textValues[index].id;
-        const updated = textValues.filter((_, i) => i !== index);
-        setTextValues(updated);
+        const rowId = rows[index].id;
+        const updated = rows.filter((_, i) => i !== index);
+        setRows(updated);
         setPercentageInputs((prev) => {
             const n = { ...prev };
             delete n[rowId];
@@ -151,7 +151,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         if (!isEditing) {
             return;
         }
-        for (const row of textValues) {
+        for (const row of rows) {
             const rowEl = inputRowRef.current.get(row.id);
             if (!rowEl) {
                 continue;
@@ -168,7 +168,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                 ta.style.height = `${maxH}px`;
             }
         }
-    }, [textValues, isEditing]);
+    }, [rows, isEditing]);
 
     // Track heights of left/right side spans so we can push the value label further
     // down when the slider is near an edge (0-20% or 80-100%) and tall side text
@@ -177,11 +177,10 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         if (isEditing) {
             return;
         }
-        const observers: ResizeObserver[] = [];
-        const measure = () => {
+        const ro = new ResizeObserver(() => {
             setSpanHeights((prev) => {
                 const next = { ...prev };
-                for (const row of textValues) {
+                for (const row of rows) {
                     const leftEl = leftSpanRef.current.get(row.id);
                     const rightEl = rightSpanRef.current.get(row.id);
                     next[row.id] = {
@@ -191,46 +190,46 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                 }
                 return next;
             });
-        };
-        for (const row of textValues) {
-            for (const el of [leftSpanRef.current.get(row.id), rightSpanRef.current.get(row.id)]) {
-                if (el) {
-                    const ro = new ResizeObserver(measure);
-                    ro.observe(el);
-                    observers.push(ro);
-                }
+        });
+        for (const row of rows) {
+            const leftEl = leftSpanRef.current.get(row.id);
+            const rightEl = rightSpanRef.current.get(row.id);
+            if (leftEl) {
+                ro.observe(leftEl);
+            }
+            if (rightEl) {
+                ro.observe(rightEl);
             }
         }
-        measure();
-        return () => {
-            for (const ro of observers) {
-                ro.disconnect();
-            }
-        };
-    }, [textValues, isEditing]);
+        return () => ro.disconnect();
+    }, [rows, isEditing]);
 
     useEffect(() => {
         if (isEditing) {
             return;
         }
-        const observers: ResizeObserver[] = [];
-        for (const row of textValues) {
+        const ro = new ResizeObserver((entries) => {
+            setContainerWidths((prev) => {
+                const next = { ...prev };
+                for (const entry of entries) {
+                    for (const [id, el] of containerRef.current) {
+                        if (el === entry.target) {
+                            next[id] = (entry.target as HTMLElement).offsetWidth;
+                            break;
+                        }
+                    }
+                }
+                return next;
+            });
+        });
+        for (const row of rows) {
             const el = containerRef.current.get(row.id);
             if (el) {
-                const ro = new ResizeObserver(() => {
-                    setContainerWidths((prev) => ({ ...prev, [row.id]: el.offsetWidth }));
-                });
                 ro.observe(el);
-                observers.push(ro);
-                setContainerWidths((prev) => ({ ...prev, [row.id]: el.offsetWidth }));
             }
         }
-        return () => {
-            for (const ro of observers) {
-                ro.disconnect();
-            }
-        };
-    }, [textValues, isEditing]);
+        return () => ro.disconnect();
+    }, [rows, isEditing]);
 
     const lineHeightNum = pxStringToNumber(lineHeight);
     const indicatorSizeNum = pxStringToNumber(indicatorSize);
@@ -264,7 +263,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
 
     return (
         <div className="range-slider-v2" range-slider-v2={blockId ?? undefined}>
-            {textValues.map((item, index) => {
+            {rows.map((item, index) => {
                 const sliderAriaLabel = item.label
                     ? `${item.label}: ${item.left || 'Min'} to ${item.right || 'Max'}`
                     : `Row ${index + 1}: ${item.left || 'Min'} to ${item.right || 'Max'}`;
@@ -338,7 +337,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             offset={getIndicatorOffset(
                                                 indicatorStyle,
                                                 isEditing,
-                                                textValues[index],
+                                                rows[index],
                                                 lineHeightNum,
                                                 indicatorSizeNum,
                                             )}
@@ -460,7 +459,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             offset={getIndicatorOffset(
                                                 indicatorStyle,
                                                 isEditing,
-                                                textValues[index],
+                                                rows[index],
                                                 lineHeightNum,
                                                 indicatorSizeNum,
                                             )}
