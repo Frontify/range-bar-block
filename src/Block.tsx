@@ -30,6 +30,22 @@ import {
 } from './settings';
 import style from './style.module.css';
 
+const getLabelPaddingTop = (
+    id: string,
+    value: number,
+    spanHeights: Record<string, { left: number; right: number }>,
+    containerWidths: Record<string, number>,
+    indicatorSizeNum: number,
+): number => {
+    const DESIRED_GAP = 10;
+    const leftH = spanHeights[id]?.left ?? 0;
+    const rightH = spanHeights[id]?.right ?? 0;
+    const isNarrow = (containerWidths[id] ?? 9999) <= 480;
+    const relevantH = isNarrow ? Math.max(leftH, rightH) : value <= 20 ? leftH : value >= 80 ? rightH : 0;
+    const overlap = Math.max(0, (relevantH - indicatorSizeNum) / 2);
+    return DESIRED_GAP + overlap;
+};
+
 type RangeSliderSettings = {
     showValueLabel: boolean;
     indicatorStyle: IndicatorShape;
@@ -283,7 +299,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const halfIndicatorWidth = pxStringToNumber(indicatorDimensions.width) / 2;
 
     return (
-        <div className="range-slider-v2" range-slider-v2={blockId ?? undefined}>
+        <div data-block-id={blockId ?? undefined}>
             {rows.map((item, index) => {
                 const sliderAriaLabel = item.label
                     ? `${item.label}: ${item.left || 'Min'} to ${item.right || 'Max'}`
@@ -431,6 +447,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                                     placeholder="0–100"
                                                     aria-label="Percentage value"
                                                     status={percentageErrors[item.id] ? 'error' : 'neutral'}
+                                                    aria-invalid={percentageErrors[item.id] ? 'true' : undefined}
                                                     aria-describedby={`pct-error-${item.id}`}
                                                 />
                                             </div>
@@ -439,7 +456,6 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                         <span
                                             id={`pct-error-${item.id}`}
                                             role="alert"
-                                            aria-live="assertive"
                                             className={style.percentageError}
                                         >
                                             {percentageErrors[item.id] && 'Enter a value between 0 and 100'}
@@ -488,26 +504,13 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             onLabelHeight={(h) =>
                                                 setLabelHeights((prev) => ({ ...prev, [item.id]: h }))
                                             }
-                                            labelPaddingTop={(() => {
-                                                const DESIRED_GAP = 10;
-                                                const leftH = spanHeights[item.id]?.left ?? 0;
-                                                const rightH = spanHeights[item.id]?.right ?? 0;
-                                                // For narrow containers (≤480px, i.e. 3–4 Frontify columns),
-                                                // compensate for both sides at all slider positions because
-                                                // tall wrapped text can overlap the label anywhere on the track.
-                                                const isNarrow = (containerWidths[item.id] ?? 9999) <= 480;
-                                                const relevantH = isNarrow
-                                                    ? Math.max(leftH, rightH)
-                                                    : item.value <= 20
-                                                      ? leftH
-                                                      : item.value >= 80
-                                                        ? rightH
-                                                        : 0;
-                                                // Add desired gap ON TOP of the overlap compensation.
-                                                // Math.max prevents a negative term when span is shorter than thumb.
-                                                const overlap = Math.max(0, (relevantH - indicatorSizeNum) / 2);
-                                                return DESIRED_GAP + overlap;
-                                            })()}
+                                            labelPaddingTop={getLabelPaddingTop(
+                                                item.id,
+                                                item.value,
+                                                spanHeights,
+                                                containerWidths,
+                                                indicatorSizeNum,
+                                            )}
                                         />
                                     </div>
                                     <span

@@ -9,9 +9,12 @@ import RangeSlider from '../RangeSlider';
 // ---------------------------------------------------------------------------
 
 vi.mock('../style.module.css', () => ({
-    default: new Proxy({} as Record<string | symbol, string>, {
-        get: (_t: Record<string | symbol, string>, key: string | symbol): string => String(key),
-    }),
+    default: new Proxy(
+        {},
+        {
+            get: (_t: Record<string | symbol, string>, key: string | symbol): string => String(key),
+        },
+    ),
 }));
 
 // ---------------------------------------------------------------------------
@@ -79,7 +82,7 @@ describe('RangeSlider', () => {
 
     it('sets --thumb-size CSS variable on the root element', () => {
         const { container } = render(
-            <RangeSlider {...defaultProps} indicatorStyles={{ width: '48px', height: '48px' } as CSSProperties} />,
+            <RangeSlider {...defaultProps} indicatorStyles={{ width: '48px', height: '48px' }} />,
         );
         const root = container.firstElementChild as HTMLElement;
         expect(root).toHaveStyle({ '--thumb-size': '48px' });

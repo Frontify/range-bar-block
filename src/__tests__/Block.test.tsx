@@ -11,9 +11,12 @@ import { type SliderRow } from '../indicatorHelpers';
 
 // Stub CSS modules — return an empty proxy so className lookups don't throw
 vi.mock('../style.module.css', () => ({
-    default: new Proxy({} as Record<string | symbol, string>, {
-        get: (_t: Record<string | symbol, string>, key: string | symbol): string => String(key),
-    }),
+    default: new Proxy(
+        {},
+        {
+            get: (_t: Record<string | symbol, string>, key: string | symbol): string => String(key),
+        },
+    ),
 }));
 
 const mockSetBlockSettings = vi.fn().mockResolvedValue(undefined);
