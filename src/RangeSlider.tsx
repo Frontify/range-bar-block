@@ -24,7 +24,6 @@ type RangeSliderProps = {
     sliderAriaLabel: string;
     ariaValueText?: string;
     label?: string;
-    textColorStyle?: CSSProperties;
     showValueLabel?: boolean;
     onLabelHeight?: (height: number) => void;
     labelPaddingTop?: number;
@@ -44,7 +43,6 @@ const RangeSlider: FC<RangeSliderProps> = ({
     sliderAriaLabel,
     ariaValueText,
     label,
-    textColorStyle,
     showValueLabel = true,
     onLabelHeight,
     labelPaddingTop,
@@ -82,8 +80,14 @@ const RangeSlider: FC<RangeSliderProps> = ({
     const valuePercent = (value / max) * 100;
     const labelLeft = `clamp(${halfIndicatorWidth}px, ${valuePercent + offset}%, calc(100% - ${halfIndicatorWidth}px))`;
 
+    const rootVars = {
+        '--thumb-size': indicatorStyles.width ?? '16px',
+        '--label-left': labelLeft,
+        '--label-pt': `${labelPaddingTop ?? 10}px`,
+    } as CSSProperties;
+
     return (
-        <div className={style.sliderRoot} style={{ '--thumb-size': indicatorStyles.width ?? '16px' } as CSSProperties}>
+        <div className={style.sliderRoot} style={rootVars}>
             <div className={style.wrapper}>
                 <div className={style.inputWrapper}>
                     <input
@@ -102,22 +106,15 @@ const RangeSlider: FC<RangeSliderProps> = ({
 
                 <div className={style.controlWrapper}>
                     <div className={style.rail} style={lineStyles}>
-                        <div
-                            className={style.innerRail}
-                            style={{ ...activeLineStyles, right: `calc(100% - ${labelLeft})` }}
-                        />
+                        <div className={style.innerRail} style={activeLineStyles} />
                     </div>
-                    <div className={style.control} style={{ ...indicatorStyles, left: labelLeft }} />
+                    <div className={style.control} style={indicatorStyles} />
                 </div>
             </div>
 
             {!isEditing && showValueLabel && label && (
-                <div
-                    ref={labelRef}
-                    className={style.valueLabel}
-                    style={{ left: labelLeft, paddingTop: labelPaddingTop ?? 10 }}
-                >
-                    <span style={textColorStyle}>{label}</span>
+                <div ref={labelRef} className={style.valueLabel}>
+                    <span>{label}</span>
                 </div>
             )}
         </div>

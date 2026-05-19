@@ -278,7 +278,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         [lineStyle, lineHeight, lineActiveColor],
     );
 
-    const textColorStyle: CSSProperties = useMemo(() => ({ color: toRgbaString(textColor) }), [textColor]);
+    const textColorValue = useMemo(() => toRgbaString(textColor), [textColor]);
 
     const halfIndicatorWidth = pxStringToNumber(indicatorDimensions.width) / 2;
 
@@ -294,11 +294,16 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                 // Piecewise-linear translate: ramps 0→-50% over value 0-20, holds -50% from 20-80, ramps -50%→-100% over 80-100
                 const editLabelTranslate =
                     item.value <= 20 ? item.value * 2.5 : item.value >= 80 ? 50 + (item.value - 80) * 2.5 : 50;
+                const containerStyle = {
+                    '--text-color': textColorValue,
+                    '--edit-label-left': editLabelLeft,
+                    '--edit-label-translate': `${editLabelTranslate}%`,
+                } as CSSProperties;
                 return (
                     <div
                         className={`${style.container}`}
                         key={item.id}
-                        style={{ '--thumb-size': indicatorDimensions.width } as CSSProperties}
+                        style={containerStyle}
                         ref={(el) => {
                             if (el) {
                                 containerRef.current.set(item.id, el);
@@ -371,13 +376,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             showValueLabel={false}
                                         />
                                         {showValueLabel && (
-                                            <div
-                                                className={style.editLabelFloating}
-                                                style={{
-                                                    left: editLabelLeft,
-                                                    transform: `translateX(-${editLabelTranslate}%)`,
-                                                }}
-                                            >
+                                            <div className={style.editLabelFloating}>
                                                 <Textarea
                                                     value={item.label ?? ''}
                                                     onChange={(e) => onLabelChange(e.target.value, index)}
@@ -435,12 +434,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                                     aria-describedby={`pct-error-${item.id}`}
                                                 />
                                             </div>
-                                            <span
-                                                className={style.percentageUnit}
-                                                style={{ color: textColorStyle.color }}
-                                            >
-                                                %
-                                            </span>
+                                            <span className={style.percentageUnit}>%</span>
                                         </div>
                                         <span
                                             id={`pct-error-${item.id}`}
@@ -466,7 +460,6 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                         }}
                                         title={item.left}
                                         className={style.labelTextLeft}
-                                        style={textColorStyle}
                                     >
                                         {item.left}
                                     </span>
@@ -491,7 +484,6 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                             sliderAriaLabel={sliderAriaLabel}
                                             ariaValueText={ariaValueText}
                                             label={item.label}
-                                            textColorStyle={textColorStyle}
                                             showValueLabel={showValueLabel}
                                             onLabelHeight={(h) =>
                                                 setLabelHeights((prev) => ({ ...prev, [item.id]: h }))
@@ -528,7 +520,6 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                         }}
                                         title={item.right}
                                         className={style.labelTextRight}
-                                        style={textColorStyle}
                                     >
                                         {item.right}
                                     </span>

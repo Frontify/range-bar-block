@@ -105,6 +105,7 @@
 
 .percentageUnit {
     font-size: 13px;
+    color: var(--text-color, inherit);
 }
 
 .percentageError {
@@ -123,6 +124,8 @@
     margin-top: 8px;
     width: 120px;
     z-index: 2;
+    left: var(--edit-label-left, 50%);
+    transform: translateX(calc(-1 * var(--edit-label-translate, 50%)));
 }
 
 /* In-flow Row 3 label: visible by default (narrow); hidden in wide via @container. */
@@ -193,6 +196,7 @@
     min-width: 0;
     max-width: 28%;
     text-align: left;
+    color: var(--text-color, inherit);
 }
 
 .labelTextRight {
@@ -203,6 +207,7 @@
     min-width: 0;
     max-width: 28%;
     text-align: right;
+    color: var(--text-color, inherit);
 }
 
 /* RangeSlider styles */
@@ -300,24 +305,20 @@
     width: 100%;
     top: 50%;
     transform: translateY(-50%);
-    height: 6px;
-    border-radius: 3px;
-    background: lightgrey;
 }
 
 .innerRail {
     position: absolute;
     height: 100%;
     left: 0;
+    right: calc(100% - var(--label-left, 50%));
 }
 
 .control {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
+    left: var(--label-left, 50%);
     z-index: 2;
 }
 
@@ -330,12 +331,17 @@
 .valueLabel {
     position: absolute;
     top: 100%;
+    left: var(--label-left, 50%);
     transform: translateX(-50%);
-    padding-top: 10px;
+    padding-top: var(--label-pt, 10px);
     white-space: normal;
     word-break: break-word;
     overflow-wrap: anywhere;
     text-align: center;
     width: 140px;
     z-index: 1;
+}
+
+.valueLabel span {
+    color: var(--text-color, inherit);
 }
