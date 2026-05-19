@@ -15,6 +15,7 @@
 
 .editInputRow {
     display: flex;
+    align-items: flex-start;
     gap: 8px;
     margin-bottom: 6px;
 }
@@ -30,12 +31,6 @@
 .editLabelFloating textarea,
 .editLabelInline textarea {
     field-sizing: content;
-}
-
-/* Min/Max textareas: default 34 px, grow with content */
-.editInputRowItem textarea,
-.inputSideWideOnly textarea {
-    min-height: 34px;
 }
 
 .editSliderRow {
