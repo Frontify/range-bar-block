@@ -32,6 +32,12 @@
     field-sizing: content;
 }
 
+/* Min/Max textareas: default 34 px, grow with content */
+.editInputRowItem textarea,
+.inputSideWideOnly textarea {
+    min-height: 34px;
+}
+
 .editSliderRow {
     display: flex;
     align-items: center;
@@ -109,9 +115,12 @@
 }
 
 .percentageError {
+    display: block;
     font-size: 11px;
     color: red;
     line-height: 1;
+    margin-top: 5px;
+    text-align: right;
 }
 
 /* Remove sliderRow / sliderRowWrapper / sliderRowContent — replaced by editSliderRow / viewSliderRow */

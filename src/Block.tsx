@@ -1,5 +1,5 @@
 import { useBlockSettings, useEditorState } from '@frontify/app-bridge';
-import { Button, TextInput, Textarea } from '@frontify/fondue/components';
+import { Button, Textarea } from '@frontify/fondue/components';
 import { IconPlus, IconTrashBin } from '@frontify/fondue/icons';
 import { type BlockProps } from '@frontify/guideline-blocks-settings';
 import {
@@ -133,9 +133,9 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
         saveDebounced(updated);
     };
 
-    const onPercentageChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    const onPercentageChange = (e: ChangeEvent<HTMLTextAreaElement>, index: number) => {
         const rowId = rows[index].id;
-        const raw = e.target.value;
+        const raw = e.target.value.replaceAll('\n', '');
         setPercentageInputs((prev) => ({ ...prev, [rowId]: raw }));
         if (raw === '') {
             setPercentageErrors((prev) => ({ ...prev, [rowId]: false }));
@@ -313,7 +313,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     const halfIndicatorWidth = pxStringToNumber(indicatorDimensions.width) / 2;
 
     return (
-        <div data-block-id={blockId ?? undefined}>
+        <div data-range-slider-block={blockId ?? undefined} data-block-id={blockId ?? undefined}>
             {rows.map((item, index) => {
                 const sliderAriaLabel = item.label
                     ? `${item.label}: ${item.left || 'Min'} to ${item.right || 'Max'}`
@@ -454,28 +454,29 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                     <div className={style.percentageControl}>
                                         <div className={style.editControlsRow}>
                                             <div className={style.percentageInput}>
-                                                <TextInput
+                                                <Textarea
                                                     value={percentageInputs[item.id] ?? String(item.value)}
                                                     onChange={(e) => onPercentageChange(e, index)}
                                                     onBlur={() => onPercentageBlur(index)}
-                                                    placeholder="0–100"
+                                                    placeholder="%"
                                                     aria-label="Percentage value"
-                                                    status={percentageErrors[item.id] ? 'error' : 'neutral'}
                                                     aria-invalid={percentageErrors[item.id] ? 'true' : undefined}
                                                     aria-describedby={`pct-error-${item.id}`}
+                                                    minRows={1}
+                                                    maxRows={1}
                                                 />
                                             </div>
                                             <span className={style.percentageUnit}>%</span>
                                         </div>
-                                        <span
-                                            id={`pct-error-${item.id}`}
-                                            role="alert"
-                                            className={style.percentageError}
-                                        >
-                                            {percentageErrors[item.id] && 'Enter a value between 0 and 100'}
-                                        </span>
                                     </div>
                                 </div>
+                                <span
+                                    id={`pct-error-${item.id}`}
+                                    role="alert"
+                                    className={style.percentageError}
+                                >
+                                    {percentageErrors[item.id] && 'Enter a value between 0 and 100'}
+                                </span>
                             </>
                         ) : (
                             <>

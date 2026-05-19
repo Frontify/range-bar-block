@@ -83,12 +83,30 @@ vi.mock('@frontify/fondue/components', () => ({
     Textarea: ({
         value,
         onChange,
+        onBlur,
         placeholder,
+        'aria-label': ariaLabel,
+        'aria-describedby': ariaDescribedby,
+        'aria-invalid': ariaInvalid,
     }: {
         value: string;
         onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+        onBlur?: () => void;
         placeholder?: string;
-    }) => <textarea value={value} onChange={onChange} placeholder={placeholder} />,
+        'aria-label'?: string;
+        'aria-describedby'?: string;
+        'aria-invalid'?: string;
+    }) => (
+        <textarea
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            aria-label={ariaLabel}
+            aria-describedby={ariaDescribedby}
+            aria-invalid={ariaInvalid as React.AriaAttributes['aria-invalid']}
+        />
+    ),
 }));
 
 vi.mock('@frontify/fondue/icons', () => ({
