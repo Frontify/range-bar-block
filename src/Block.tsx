@@ -12,6 +12,7 @@ import {
     useMemo,
     useRef,
     useState,
+    startTransition,
 } from 'react';
 
 import RangeSlider from './RangeSlider';
@@ -110,8 +111,10 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
     // and there is no pending local save in flight.
     useEffect(() => {
         if (!timerRef.current) {
-            setRows(savedTextValues);
-            setPercentageInputs(Object.fromEntries(savedTextValues.map((r) => [r.id, String(r.value)])));
+            startTransition(() => {
+                setRows(savedTextValues);
+                setPercentageInputs(Object.fromEntries(savedTextValues.map((r) => [r.id, String(r.value)])));
+            });
         }
     }, [savedTextValues]);
 
@@ -470,11 +473,7 @@ export const RangeSliderBlock: FC<BlockProps> = ({ appBridge }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <span
-                                    id={`pct-error-${item.id}`}
-                                    role="alert"
-                                    className={style.percentageError}
-                                >
+                                <span id={`pct-error-${item.id}`} role="alert" className={style.percentageError}>
                                     {percentageErrors[item.id] && 'Enter a value between 0 and 100'}
                                 </span>
                             </>
