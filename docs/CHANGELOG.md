@@ -59,11 +59,11 @@ A numeric percentage input field is displayed in edit mode (bottom-right of each
 | ---------------------- | --------------------------------- |
 | Only drag to set value | Drag **or** type exact percentage |
 
-### 2.4 CSS scoping via `range-slider-v2`
+### 2.4 CSS scoping via `data-range-slider-block`
 
-- Root `<div>` receives `range-slider-v2={blockId}` from `appBridge.context('blockId').get()`.
-- All global CSS selectors in `style.css` prefixed with `.range-slider-v2` to prevent style leakage between block instances.
-- CSS module styles (`.container`, `.sliderRow`, etc.) remain locally scoped as-is.
+- Root `<div>` receives `data-range-slider-block={blockId}` (and `data-block-id={blockId}`) from `appBridge.context('blockId').get()`.
+- A custom PostCSS plugin (`postcss/scope.cjs`) prefixes all global CSS selectors with `[data-range-slider-block]`, scoping both authored styles and any dependency CSS that passes through the bundle.
+- CSS module styles (`.container`, `.sliderRow`, etc.) remain locally scoped by PostCSS Modules as-is.
 
 ### 2.5 Improved layout and overflow handling
 
